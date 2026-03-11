@@ -1,0 +1,3236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoNerve – AI-Powered Sustainability</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --green: #1db954;
+    --green-dark: #17a34a;
+    --blue: #0f3057;
+    --blue-light: #1a4a7a;
+    --light: #ffffff;
+    --gray: #f4f9f9;
+    --text: #1a2e1a;
+    --text-light: #4a6a4a;
+    --gradient: linear-gradient(135deg, #1db954 0%, #0f3057 100%);
+    --gradient-reverse: linear-gradient(135deg, #0f3057 0%, #1db954 100%);
+    --shadow: 0 8px 32px rgba(0,0,0,0.1);
+    --shadow-hover: 0 16px 48px rgba(0,0,0,0.15);
+    --radius: 20px;
+    --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Liquid Glass Variables */
+    --glass-bg: rgba(255, 255, 255, 0.12);
+    --glass-bg-strong: rgba(255, 255, 255, 0.18);
+    --glass-bg-card: rgba(255, 255, 255, 0.22);
+    --glass-border: rgba(255, 255, 255, 0.3);
+    --glass-border-strong: rgba(255, 255, 255, 0.45);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    --glass-shadow-hover: 0 16px 48px rgba(0, 0, 0, 0.18);
+    --glass-blur: blur(20px);
+    --glass-blur-strong: blur(30px);
+    --glass-inner-shadow: inset 0 1px 1px rgba(255,255,255,0.4), inset 0 -1px 1px rgba(0,0,0,0.05);
+    --glass-text: rgba(255,255,255,0.95);
+    --glass-text-secondary: rgba(255,255,255,0.7);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    color: var(--text);
+    overflow-x: hidden;
+    background: #0a1a0a;
+    position: relative;
+    min-height: 100vh;
+}
+
+/* NATURE BACKGROUND */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    background:
+        linear-gradient(180deg,
+            rgba(5, 25, 15, 0.3) 0%,
+            rgba(10, 40, 20, 0.2) 30%,
+            rgba(15, 50, 25, 0.3) 60%,
+            rgba(5, 20, 10, 0.5) 100%
+        ),
+        url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1920&q=80') center/cover no-repeat fixed;
+}
+
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background:
+        radial-gradient(ellipse at 20% 20%, rgba(29, 185, 84, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 60%, rgba(15, 48, 87, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 90%, rgba(29, 185, 84, 0.06) 0%, transparent 40%);
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.2);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(29, 185, 84, 0.5);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(29, 185, 84, 0.7);
+}
+
+/* LOADER */
+.loader-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        radial-gradient(ellipse at center, rgba(10, 50, 25, 0.95), rgba(5, 15, 8, 0.98)),
+        url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1920&q=80') center/cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+    backdrop-filter: blur(5px);
+}
+
+.loader-wrapper.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+}
+
+.loader-icon {
+    width: 70px;
+    height: 70px;
+    border: 3px solid rgba(29, 185, 84, 0.15);
+    border-top-color: var(--green);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    box-shadow: 0 0 30px rgba(29, 185, 84, 0.2);
+}
+
+.loader-leaf {
+    position: absolute;
+    font-size: 24px;
+    animation: spin 1s linear infinite reverse;
+}
+
+.loader-text {
+    color: rgba(255,255,255,0.9);
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 4px;
+    animation: pulse 1.5s ease-in-out infinite;
+    text-shadow: 0 0 20px rgba(29, 185, 84, 0.3);
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+/* LIQUID GLASS MIXIN STYLES */
+.glass {
+    background: var(--glass-bg-card);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow), var(--glass-inner-shadow);
+    border-radius: var(--radius);
+}
+
+.glass-strong {
+    background: var(--glass-bg-strong);
+    backdrop-filter: var(--glass-blur-strong);
+    -webkit-backdrop-filter: var(--glass-blur-strong);
+    border: 1px solid var(--glass-border-strong);
+    box-shadow: var(--glass-shadow), var(--glass-inner-shadow);
+    border-radius: var(--radius);
+}
+
+/* PARTICLES BACKGROUND */
+.particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.particle {
+    position: absolute;
+    border-radius: 50%;
+    animation: floatParticle linear infinite;
+    opacity: 0;
+}
+
+.particle.leaf {
+    font-size: 16px;
+    background: none;
+    width: auto;
+    height: auto;
+    animation: floatLeaf linear infinite;
+}
+
+@keyframes floatParticle {
+    0% {
+        transform: translateY(100vh) rotate(0deg) scale(0);
+        opacity: 0;
+    }
+    10% { opacity: 0.6; }
+    90% { opacity: 0.6; }
+    100% {
+        transform: translateY(-10vh) rotate(360deg) scale(1);
+        opacity: 0;
+    }
+}
+
+@keyframes floatLeaf {
+    0% {
+        transform: translateY(100vh) rotate(0deg) translateX(0px);
+        opacity: 0;
+    }
+    10% { opacity: 0.7; }
+    50% { transform: translateY(50vh) rotate(180deg) translateX(50px); }
+    90% { opacity: 0.7; }
+    100% {
+        transform: translateY(-10vh) rotate(360deg) translateX(-30px);
+        opacity: 0;
+    }
+}
+
+/* FLOATING NATURE ELEMENTS */
+.nature-float {
+    position: fixed;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.04;
+    font-size: 200px;
+    animation: gentleFloat 20s ease-in-out infinite;
+}
+
+.nature-float:nth-child(1) {
+    top: 10%;
+    left: -5%;
+    animation-delay: 0s;
+}
+
+.nature-float:nth-child(2) {
+    top: 40%;
+    right: -5%;
+    animation-delay: -7s;
+    font-size: 150px;
+}
+
+.nature-float:nth-child(3) {
+    bottom: 10%;
+    left: 10%;
+    animation-delay: -14s;
+    font-size: 180px;
+}
+
+@keyframes gentleFloat {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(-20px) rotate(2deg); }
+    50% { transform: translateY(-10px) rotate(-1deg); }
+    75% { transform: translateY(-25px) rotate(1deg); }
+}
+
+/* NAVBAR - LIQUID GLASS */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 8%;
+    height: 72px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(25px) saturate(180%);
+    -webkit-backdrop-filter: blur(25px) saturate(180%);
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+    transition: var(--transition);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+header.scrolled {
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 4px 30px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.2);
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    height: 64px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.logo-icon {
+    width: 42px;
+    height: 42px;
+    background: linear-gradient(135deg, rgba(29, 185, 84, 0.6), rgba(15, 48, 87, 0.6));
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(29, 185, 84, 0.2), inset 0 1px 1px rgba(255,255,255,0.3);
+}
+
+.logo-icon::after {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%);
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) rotate(45deg); }
+}
+
+.logo h2 {
+    color: rgba(255,255,255,0.95);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.logo h2 span {
+    color: var(--green);
+    text-shadow: 0 0 15px rgba(29, 185, 84, 0.3);
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+nav a {
+    text-decoration: none;
+    color: rgba(255,255,255,0.75);
+    font-weight: 500;
+    font-size: 14px;
+    padding: 8px 16px;
+    border-radius: 12px;
+    transition: var(--transition);
+    position: relative;
+}
+
+nav a:hover {
+    color: white;
+    background: rgba(255,255,255,0.1);
+}
+
+nav a.active {
+    color: white;
+    background: rgba(29, 185, 84, 0.15);
+    border: 1px solid rgba(29, 185, 84, 0.2);
+}
+
+.nav-cta {
+    background: rgba(29, 185, 84, 0.25) !important;
+    color: white !important;
+    padding: 8px 22px !important;
+    border-radius: 25px !important;
+    font-weight: 600 !important;
+    margin-left: 8px;
+    border: 1px solid rgba(29, 185, 84, 0.4) !important;
+    box-shadow: 0 4px 15px rgba(29, 185, 84, 0.15);
+}
+
+.nav-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(29, 185, 84, 0.3) !important;
+    background: rgba(29, 185, 84, 0.35) !important;
+}
+
+/* HAMBURGER */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    z-index: 1001;
+    padding: 5px;
+}
+
+.hamburger span {
+    width: 25px;
+    height: 3px;
+    background: rgba(255,255,255,0.9);
+    border-radius: 3px;
+    transition: var(--transition);
+}
+
+.hamburger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 6px);
+}
+
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+    transform: translateX(-10px);
+}
+
+.hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -6px);
+}
+
+/* MOBILE MENU - GLASS */
+.mobile-menu {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 280px;
+    height: 100vh;
+    background: rgba(10, 30, 15, 0.85);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
+    border-left: 1px solid rgba(255,255,255,0.1);
+    box-shadow: -10px 0 40px rgba(0,0,0,0.3);
+    padding: 100px 40px 40px;
+    z-index: 999;
+    transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mobile-menu.active {
+    right: 0;
+}
+
+.mobile-menu a {
+    display: block;
+    text-decoration: none;
+    color: rgba(255,255,255,0.8);
+    font-weight: 500;
+    font-size: 16px;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    transition: var(--transition);
+}
+
+.mobile-menu a:hover {
+    color: var(--green);
+    padding-left: 10px;
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(5px);
+    z-index: 998;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.overlay.active {
+    opacity: 1;
+}
+
+/* HERO */
+.hero {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 120px 20px 80px;
+    position: relative;
+    overflow: hidden;
+    background:
+        radial-gradient(ellipse at 30% 50%, rgba(29, 185, 84, 0.1) 0%, transparent 60%),
+        radial-gradient(ellipse at 70% 30%, rgba(15, 48, 87, 0.1) 0%, transparent 50%),
+        linear-gradient(180deg, rgba(5, 20, 10, 0.4) 0%, rgba(10, 35, 18, 0.3) 50%, rgba(5, 20, 10, 0.5) 100%);
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -30%;
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(29, 185, 84, 0.06) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: float 8s ease-in-out infinite;
+}
+
+.hero::after {
+    content: '';
+    position: absolute;
+    bottom: -40%;
+    left: -20%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(29, 185, 84, 0.04) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: float 10s ease-in-out infinite reverse;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(30px, -30px); }
+}
+
+/* Nature scene overlay */
+.hero-nature-scene {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 300px;
+    background: url('https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?w=1920&q=80') center bottom/cover no-repeat;
+    opacity: 0.08;
+    mask-image: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 100%);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 10px 24px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 25px;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.9);
+    animation: fadeInDown 1s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1), inset 0 1px 1px rgba(255,255,255,0.1);
+}
+
+.badge-dot {
+    width: 8px;
+    height: 8px;
+    background: #4ade80;
+    border-radius: 50%;
+    animation: blink 2s infinite;
+    box-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; box-shadow: 0 0 10px rgba(74, 222, 128, 0.5); }
+    50% { opacity: 0.3; box-shadow: 0 0 5px rgba(74, 222, 128, 0.2); }
+}
+
+.hero h1 {
+    font-size: 56px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    animation: fadeInUp 1s ease 0.2s both;
+    color: rgba(255,255,255,0.95);
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.hero h1 .highlight {
+    background: linear-gradient(90deg, #4ade80, #22d3ee);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 20px rgba(74, 222, 128, 0.3));
+}
+
+.hero p {
+    font-size: 17px;
+    margin-bottom: 35px;
+    max-width: 620px;
+    margin-left: auto;
+    margin-right: auto;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.7;
+    animation: fadeInUp 1s ease 0.4s both;
+}
+
+.hero-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    animation: fadeInUp 1s ease 0.6s both;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* BUTTONS - GLASS */
+.btn {
+    padding: 14px 32px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 15px;
+    font-family: 'Poppins', sans-serif;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.1) 50%, transparent 60%);
+    transition: transform 0.6s ease;
+    transform: translateX(-100%);
+}
+
+.btn:hover::after {
+    transform: translateX(100%);
+}
+
+.btn-primary {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1), inset 0 1px 1px rgba(255,255,255,0.2);
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    background: rgba(255, 255, 255, 0.22);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.3);
+    border-color: rgba(255,255,255,0.5);
+}
+
+.btn-secondary {
+    background: rgba(29, 185, 84, 0.15);
+    color: white;
+    border: 1px solid rgba(29, 185, 84, 0.3);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow: 0 4px 15px rgba(29, 185, 84, 0.1);
+}
+
+.btn-secondary:hover {
+    background: rgba(29, 185, 84, 0.25);
+    border-color: rgba(29, 185, 84, 0.5);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(29, 185, 84, 0.2);
+}
+
+.btn-green {
+    background: rgba(29, 185, 84, 0.25);
+    color: white;
+    border: 1px solid rgba(29, 185, 84, 0.4);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 4px 15px rgba(29, 185, 84, 0.15), inset 0 1px 1px rgba(255,255,255,0.1);
+}
+
+.btn-green:hover {
+    transform: translateY(-3px);
+    background: rgba(29, 185, 84, 0.35);
+    box-shadow: 0 8px 25px rgba(29, 185, 84, 0.25);
+}
+
+.hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 60px;
+    animation: fadeInUp 1s ease 0.8s both;
+}
+
+.hero-stat {
+    text-align: center;
+    padding: 20px 25px;
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(15px);
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.1);
+    min-width: 130px;
+}
+
+.hero-stat h3 {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--green);
+    text-shadow: 0 0 15px rgba(29, 185, 84, 0.3);
+}
+
+.hero-stat p {
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 0;
+    margin-top: 5px;
+}
+
+/* SCROLL INDICATOR */
+.scroll-indicator {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    animation: bounce 2s infinite;
+}
+
+.scroll-indicator div {
+    width: 28px;
+    height: 44px;
+    border: 2px solid rgba(255,255,255,0.25);
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    padding-top: 8px;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+}
+
+.scroll-indicator div span {
+    width: 4px;
+    height: 8px;
+    background: rgba(255,255,255,0.7);
+    border-radius: 3px;
+    animation: scrollDot 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+}
+
+@keyframes scrollDot {
+    0% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(12px); }
+}
+
+/* SECTION STYLING */
+section {
+    padding: 100px 8%;
+    position: relative;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.section-header .tag {
+    display: inline-block;
+    background: rgba(29, 185, 84, 0.12);
+    backdrop-filter: blur(10px);
+    color: var(--green);
+    padding: 6px 20px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border: 1px solid rgba(29, 185, 84, 0.2);
+}
+
+.section-header h2 {
+    font-size: 38px;
+    color: rgba(255,255,255,0.95);
+    font-weight: 700;
+    margin-bottom: 15px;
+    letter-spacing: -0.5px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.section-header p {
+    color: rgba(255,255,255,0.6);
+    max-width: 550px;
+    margin: 0 auto;
+    line-height: 1.7;
+}
+
+/* FEATURES - GLASS CARDS */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+.feature-card {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    padding: 35px 30px;
+    border-radius: var(--radius);
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1), inset 0 1px 1px rgba(255,255,255,0.1);
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+}
+
+.feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--green), rgba(34, 211, 238, 0.8));
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+    transform-origin: left;
+}
+
+.feature-card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(ellipse, rgba(29, 185, 84, 0.05) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.feature-card:hover::before {
+    transform: scaleX(1);
+}
+
+.feature-card:hover::after {
+    opacity: 1;
+}
+
+.feature-card:hover {
+    transform: translateY(-8px);
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255,255,255,0.2);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.15);
+}
+
+.feature-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.feature-icon.green {
+    background: rgba(29, 185, 84, 0.12);
+    border: 1px solid rgba(29, 185, 84, 0.2);
+    box-shadow: 0 4px 15px rgba(29, 185, 84, 0.1);
+}
+
+.feature-icon.blue {
+    background: rgba(59, 130, 246, 0.12);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.1);
+}
+
+.feature-icon.orange {
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.1);
+}
+
+.feature-icon.red {
+    background: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.1);
+}
+
+.feature-icon.purple {
+    background: rgba(139, 92, 246, 0.12);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.1);
+}
+
+.feature-card h3 {
+    font-size: 18px;
+    color: rgba(255,255,255,0.95);
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.feature-card p {
+    color: rgba(255,255,255,0.6);
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+/* DASHBOARD SECTION */
+.dashboard-section {
+    background:
+        radial-gradient(ellipse at 20% 50%, rgba(29, 185, 84, 0.05) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 50%, rgba(15, 48, 87, 0.05) 0%, transparent 50%);
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.data-card {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    padding: 30px;
+    border-radius: var(--radius);
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1), inset 0 1px 1px rgba(255,255,255,0.1);
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.data-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255,255,255,0.2);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.15);
+}
+
+/* Liquid ripple effect on cards */
+.data-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 50%, rgba(255,255,255,0.02) 100%);
+    pointer-events: none;
+}
+
+.data-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    position: relative;
+    z-index: 1;
+}
+
+.data-card-header h3 {
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.data-card-header .icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.data-value {
+    font-size: 38px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.95);
+    margin-bottom: 5px;
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.data-label {
+    font-size: 14px;
+    font-weight: 500;
+    position: relative;
+    z-index: 1;
+}
+
+.status-good {
+    color: #4ade80;
+    text-shadow: 0 0 10px rgba(74, 222, 128, 0.3);
+}
+
+.status-warning {
+    color: #fbbf24;
+    text-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+}
+
+.status-danger {
+    color: #f87171;
+    text-shadow: 0 0 10px rgba(248, 113, 113, 0.3);
+}
+
+.status-hazardous {
+    color: #c084fc;
+    text-shadow: 0 0 10px rgba(192, 132, 252, 0.3);
+}
+
+.status-severe {
+    color: #991b1b;
+    text-shadow: 0 0 10px rgba(153, 27, 27, 0.5);
+}
+
+.data-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 3px;
+    margin-top: 15px;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.data-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 0;
+    position: relative;
+}
+
+.data-bar-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    animation: barShimmer 2s infinite;
+}
+
+@keyframes barShimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.bar-good { background: linear-gradient(90deg, #16a34a, #4ade80); box-shadow: 0 0 10px rgba(74, 222, 128, 0.3); }
+.bar-warning { background: linear-gradient(90deg, #f59e0b, #fbbf24); box-shadow: 0 0 10px rgba(251, 191, 36, 0.3); }
+.bar-danger { background: linear-gradient(90deg, #ef4444, #f87171); box-shadow: 0 0 10px rgba(248, 113, 113, 0.3); }
+.bar-hazardous { background: linear-gradient(90deg, #8b5cf6, #c084fc); box-shadow: 0 0 10px rgba(192, 132, 252, 0.3); }
+.bar-severe { background: linear-gradient(90deg, #991b1b, #dc2626); box-shadow: 0 0 10px rgba(220, 38, 38, 0.3); }
+
+/* LIVE CHART - GLASS */
+.chart-container {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    padding: 30px;
+    border-radius: var(--radius);
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1), inset 0 1px 1px rgba(255,255,255,0.1);
+    margin-top: 25px;
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.chart-header h3 {
+    font-size: 18px;
+    color: rgba(255,255,255,0.9);
+    font-weight: 600;
+}
+
+.chart-legend {
+    display: flex;
+    gap: 20px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+}
+
+.legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    box-shadow: 0 0 8px currentColor;
+}
+
+.canvas-wrap {
+    width: 100%;
+    height: 200px;
+    position: relative;
+}
+
+canvas#liveChart {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* AQI GAUGE */
+.aqi-gauge-container {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    padding: 30px;
+    border-radius: var(--radius);
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1), inset 0 1px 1px rgba(255,255,255,0.1);
+    margin-top: 25px;
+    text-align: center;
+}
+
+.aqi-gauge-container h3 {
+    color: rgba(255,255,255,0.9);
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.aqi-scale {
+    display: flex;
+    border-radius: 8px;
+    overflow: hidden;
+    height: 30px;
+    margin-bottom: 8px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.aqi-scale-segment {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    font-weight: 600;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    position: relative;
+}
+
+.aqi-scale-segment.good-seg { background: #16a34a; }
+.aqi-scale-segment.moderate-seg { background: #f59e0b; }
+.aqi-scale-segment.unhealthy-sensitive-seg { background: #f97316; }
+.aqi-scale-segment.unhealthy-seg { background: #ef4444; }
+.aqi-scale-segment.very-unhealthy-seg { background: #8b5cf6; }
+.aqi-scale-segment.hazardous-seg { background: #991b1b; }
+
+.aqi-scale-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: rgba(255,255,255,0.4);
+    padding: 0 2px;
+}
+
+.aqi-pointer-container {
+    position: relative;
+    height: 20px;
+    margin-bottom: 5px;
+}
+
+.aqi-pointer {
+    position: absolute;
+    top: 0;
+    transform: translateX(-50%);
+    transition: left 1s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 16px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.aqi-info-row {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.aqi-info-item {
+    padding: 10px 20px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.08);
+}
+
+.aqi-info-item .label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.aqi-info-item .value {
+    font-size: 18px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.9);
+}
+
+/* CHECK SECTION - GLASS */
+.check-section {
+    text-align: center;
+    padding: 60px 8%;
+}
+
+.check-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(25px) saturate(150%);
+    -webkit-backdrop-filter: blur(25px) saturate(150%);
+    border-radius: 24px;
+    padding: 50px 40px;
+    max-width: 650px;
+    margin: 0 auto;
+    border: 1px solid rgba(255,255,255,0.15);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12), inset 0 1px 1px rgba(255,255,255,0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+.check-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -30%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(29, 185, 84, 0.06) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.check-card h3 {
+    font-size: 24px;
+    color: rgba(255,255,255,0.95);
+    margin-bottom: 10px;
+    position: relative;
+    z-index: 1;
+}
+
+.check-card > p {
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 25px;
+    position: relative;
+    z-index: 1;
+}
+
+.location-input {
+    display: flex;
+    gap: 10px;
+    max-width: 420px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.location-input input {
+    flex: 1;
+    padding: 14px 22px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 50px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    color: white;
+    outline: none;
+    transition: var(--transition);
+}
+
+.location-input input::placeholder {
+    color: rgba(255,255,255,0.4);
+}
+
+.location-input input:focus {
+    border-color: rgba(29, 185, 84, 0.5);
+    box-shadow: 0 0 0 4px rgba(29, 185, 84, 0.1), 0 0 20px rgba(29, 185, 84, 0.1);
+    background: rgba(255,255,255,0.12);
+}
+
+/* RESULT AREA */
+.result-area {
+    margin-top: 25px;
+    display: none;
+    animation: fadeInUp 0.5s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.result-header {
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 15px;
+}
+
+.result-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.result-item {
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(10px);
+    padding: 18px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.result-item h4 {
+    font-size: 11px;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.result-item .value {
+    font-size: 22px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.95);
+}
+
+.result-recommendation {
+    margin-top: 15px;
+    padding: 15px 20px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.1);
+    text-align: left;
+}
+
+.result-recommendation h4 {
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 8px;
+}
+
+.result-recommendation p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.6;
+}
+
+/* HOW IT WORKS */
+.how-section {
+    background:
+        radial-gradient(ellipse at 50% 50%, rgba(29, 185, 84, 0.04) 0%, transparent 60%);
+}
+
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    position: relative;
+}
+
+.step-card {
+    text-align: center;
+    padding: 40px 25px;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: var(--radius);
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+    transition: var(--transition);
+}
+
+.step-card:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-5px);
+    border-color: rgba(255,255,255,0.18);
+}
+
+.step-number {
+    width: 64px;
+    height: 64px;
+    background: rgba(29, 185, 84, 0.15);
+    backdrop-filter: blur(10px);
+    color: var(--green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 auto 20px;
+    border: 1px solid rgba(29, 185, 84, 0.25);
+    box-shadow: 0 4px 15px rgba(29, 185, 84, 0.15), inset 0 1px 1px rgba(255,255,255,0.1);
+}
+
+.step-card h3 {
+    font-size: 18px;
+    color: rgba(255,255,255,0.95);
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.step-card p {
+    color: rgba(255,255,255,0.55);
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.step-icon {
+    font-size: 36px;
+    margin-bottom: 15px;
+    display: block;
+}
+
+/* IMPACT */
+.impact-section {
+    position: relative;
+    overflow: hidden;
+    background:
+        radial-gradient(ellipse at 30% 40%, rgba(29, 185, 84, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 60%, rgba(15, 48, 87, 0.08) 0%, transparent 50%);
+}
+
+.impact-section::before {
+    content: '';
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 400px;
+    height: 400px;
+    background: rgba(29, 185, 84, 0.03);
+    border-radius: 50%;
+}
+
+.impact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 25px;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+}
+
+.impact-stat {
+    padding: 35px 20px;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: var(--radius);
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+    transition: var(--transition);
+}
+
+.impact-stat:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255,255,255,0.18);
+}
+
+.impact-stat h2 {
+    font-size: 44px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    color: var(--green);
+    text-shadow: 0 0 20px rgba(29, 185, 84, 0.3);
+}
+
+.impact-stat .counter {
+    display: inline;
+}
+
+.impact-stat p {
+    color: rgba(255,255,255,0.6);
+    font-size: 14px;
+}
+
+.impact-stat .divider {
+    width: 40px;
+    height: 3px;
+    background: rgba(29, 185, 84, 0.3);
+    margin: 12px auto;
+    border-radius: 2px;
+}
+
+.impact-stat .stat-icon {
+    font-size: 28px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+/* TESTIMONIALS */
+.testimonials {
+    background:
+        radial-gradient(ellipse at 50% 50%, rgba(29, 185, 84, 0.03) 0%, transparent 50%);
+}
+
+.testimonial-slider {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+    min-height: 260px;
+}
+
+.testimonial {
+    display: none;
+    animation: fadeIn 0.6s ease;
+}
+
+.testimonial.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.testimonial-card {
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 40px 35px;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+}
+
+.testimonial-text {
+    font-size: 17px;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.8;
+    font-style: italic;
+    margin-bottom: 25px;
+}
+
+.testimonial-text::before {
+    content: '"';
+    font-size: 40px;
+    color: var(--green);
+    line-height: 0;
+    vertical-align: -15px;
+    margin-right: 5px;
+    opacity: 0.5;
+}
+
+.testimonial-author {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.author-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(29, 185, 84, 0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(29, 185, 84, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--green);
+    font-weight: 700;
+    font-size: 18px;
+    box-shadow: 0 4px 15px rgba(29, 185, 84, 0.1);
+}
+
+.author-info h4 {
+    font-size: 15px;
+    color: rgba(255,255,255,0.9);
+    text-align: left;
+}
+
+.author-info p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    text-align: left;
+}
+
+.slider-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.slider-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    cursor: pointer;
+    transition: var(--transition);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.slider-dot.active {
+    background: var(--green);
+    transform: scale(1.3);
+    box-shadow: 0 0 10px rgba(29, 185, 84, 0.4);
+    border-color: rgba(29, 185, 84, 0.5);
+}
+
+/* CTA */
+.cta-section {
+    text-align: center;
+    padding: 80px 8%;
+}
+
+.cta-card {
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(25px) saturate(150%);
+    -webkit-backdrop-filter: blur(25px) saturate(150%);
+    padding: 60px 40px;
+    border-radius: 24px;
+    color: white;
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12), inset 0 1px 1px rgba(255,255,255,0.1);
+}
+
+.cta-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(29, 185, 84, 0.06) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.cta-card::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: -15%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(15, 48, 87, 0.06) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.cta-card h2 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    position: relative;
+    z-index: 2;
+    color: rgba(255,255,255,0.95);
+}
+
+.cta-card > p {
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 30px;
+    position: relative;
+    z-index: 2;
+}
+
+/* NEWSLETTER */
+.newsletter-form {
+    display: flex;
+    gap: 10px;
+    max-width: 450px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+}
+
+.newsletter-form input {
+    flex: 1;
+    padding: 14px 24px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 50px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    color: white;
+    outline: none;
+    transition: var(--transition);
+}
+
+.newsletter-form input::placeholder {
+    color: rgba(255,255,255,0.4);
+}
+
+.newsletter-form input:focus {
+    border-color: rgba(29, 185, 84, 0.5);
+    box-shadow: 0 0 0 4px rgba(29, 185, 84, 0.1);
+}
+
+.newsletter-form button {
+    padding: 14px 28px;
+    border: none;
+    border-radius: 50px;
+    background: rgba(29, 185, 84, 0.3);
+    backdrop-filter: blur(10px);
+    color: white;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: var(--transition);
+    border: 1px solid rgba(29, 185, 84, 0.4);
+}
+
+.newsletter-form button:hover {
+    transform: scale(1.05);
+    background: rgba(29, 185, 84, 0.4);
+    box-shadow: 0 4px 15px rgba(29, 185, 84, 0.2);
+}
+
+/* FOOTER - GLASS */
+footer {
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(25px) saturate(150%);
+    -webkit-backdrop-filter: blur(25px) saturate(150%);
+    color: white;
+    padding: 60px 8% 30px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.footer-brand h3 {
+    font-size: 22px;
+    margin-bottom: 12px;
+    color: rgba(255,255,255,0.95);
+}
+
+.footer-brand h3 span {
+    color: var(--green);
+}
+
+.footer-brand p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.7;
+}
+
+.footer-links h4 {
+    font-size: 15px;
+    margin-bottom: 15px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.85);
+}
+
+.footer-links a {
+    display: block;
+    color: rgba(255,255,255,0.45);
+    text-decoration: none;
+    font-size: 14px;
+    padding: 5px 0;
+    transition: var(--transition);
+}
+
+.footer-links a:hover {
+    color: var(--green);
+    padding-left: 5px;
+}
+
+.footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.footer-bottom p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+}
+
+.social-links {
+    display: flex;
+    gap: 12px;
+}
+
+.social-link {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+    cursor: pointer;
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+}
+
+.social-link:hover {
+    background: rgba(29, 185, 84, 0.2);
+    border-color: rgba(29, 185, 84, 0.3);
+    color: var(--green);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(29, 185, 84, 0.15);
+}
+
+/* BACK TO TOP - GLASS */
+.back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background: rgba(29, 185, 84, 0.2);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    color: white;
+    border: 1px solid rgba(29, 185, 84, 0.3);
+    border-radius: 14px;
+    cursor: pointer;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition);
+    box-shadow: 0 4px 20px rgba(29, 185, 84, 0.15), inset 0 1px 1px rgba(255,255,255,0.1);
+    z-index: 100;
+}
+
+.back-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.back-to-top:hover {
+    transform: translateY(-3px);
+    background: rgba(29, 185, 84, 0.3);
+    box-shadow: 0 8px 30px rgba(29, 185, 84, 0.25);
+}
+
+/* REVEAL ANIMATION */
+.reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+.reveal-delay-5 { transition-delay: 0.5s; }
+
+/* RESPONSIVE */
+@media(max-width: 1024px) {
+    .footer-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media(max-width: 768px) {
+    header {
+        padding: 0 5%;
+    }
+
+    nav {
+        display: none;
+    }
+
+    .hamburger {
+        display: flex;
+    }
+
+    .mobile-menu {
+        display: block;
+    }
+
+    .hero h1 {
+        font-size: 34px;
+    }
+
+    .hero p {
+        font-size: 15px;
+    }
+
+    .hero-stats {
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .hero-stat {
+        min-width: 110px;
+        padding: 15px 18px;
+    }
+
+    .hero-stat h3 {
+        font-size: 20px;
+    }
+
+    .section-header h2 {
+        font-size: 28px;
+    }
+
+    .impact-stat h2 {
+        font-size: 36px;
+    }
+
+    .result-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .newsletter-form {
+        flex-direction: column;
+    }
+
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .cta-card {
+        padding: 40px 25px;
+    }
+
+    .cta-card h2 {
+        font-size: 24px;
+    }
+
+    .location-input {
+        flex-direction: column;
+    }
+
+    .aqi-scale-segment {
+        font-size: 7px;
+    }
+
+    .chart-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    .aqi-info-row {
+        gap: 10px;
+    }
+}
+
+@media(max-width: 480px) {
+    section {
+        padding: 60px 5%;
+    }
+
+    .hero h1 {
+        font-size: 28px;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hero-stats {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .steps-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* TOAST - GLASS */
+.toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(25px) saturate(180%);
+    -webkit-backdrop-filter: blur(25px) saturate(180%);
+    color: white;
+    padding: 14px 28px;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 500;
+    border: 1px solid rgba(255,255,255,0.15);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2), inset 0 1px 1px rgba(255,255,255,0.1);
+    z-index: 9999;
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* LIQUID WATER EFFECT ON HOVER */
+@keyframes liquidRipple {
+    0% {
+        box-shadow: 0 8px 32px rgba(0,0,0,0.1), inset 0 1px 1px rgba(255,255,255,0.1);
+    }
+    50% {
+        box-shadow: 0 8px 32px rgba(29, 185, 84, 0.15), inset 0 1px 1px rgba(255,255,255,0.15), 0 0 40px rgba(29, 185, 84, 0.05);
+    }
+    100% {
+        box-shadow: 0 8px 32px rgba(0,0,0,0.1), inset 0 1px 1px rgba(255,255,255,0.1);
+    }
+}
+
+/* Tree silhouette decorations */
+.tree-decoration {
+    position: fixed;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.03;
+    font-size: 300px;
+    line-height: 1;
+}
+
+.tree-decoration.left {
+    left: -50px;
+}
+
+.tree-decoration.right {
+    right: -50px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- FLOATING NATURE ELEMENTS -->
+<div class="nature-float">🌿</div>
+<div class="nature-float">🍃</div>
+<div class="nature-float">🌱</div>
+
+<!-- TREE DECORATIONS -->
+<div class="tree-decoration left">🌲</div>
+<div class="tree-decoration right">🌳</div>
+
+<!-- LOADER -->
+<div class="loader-wrapper" id="loader">
+    <div class="loader">
+        <div class="loader-icon">
+            <span class="loader-leaf">🍃</span>
+        </div>
+        <div class="loader-text">ECONERVE</div>
+    </div>
+</div>
+
+<!-- HEADER -->
+<header id="header">
+    <a href="#" class="logo">
+        <div class="logo-icon">🌿</div>
+        <h2>Eco<span>Nerve</span></h2>
+    </a>
+    <nav>
+        <a href="#features" class="active">Features</a>
+        <a href="#dashboard">Dashboard</a>
+        <a href="#how">How It Works</a>
+        <a href="#impact">Impact</a>
+    </nav>
+    <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+</header>
+
+<!-- MOBILE MENU -->
+<div class="overlay" id="overlay"></div>
+<div class="mobile-menu" id="mobileMenu">
+    <a href="#features">🌬️ Features</a>
+    <a href="#dashboard">📊 Dashboard</a>
+    <a href="#how">⚙️ How It Works</a>
+    <a href="#impact">🌍 Impact</a>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="home">
+    <div class="particles" id="particles"></div>
+    <div class="hero-nature-scene"></div>
+    <div class="hero-content">
+        <div class="hero-badge">
+            <span class="badge-dot"></span>
+            Live Environmental Monitoring Active
+        </div>
+        <h1>AI-Powered<br><span class="highlight">Sustainability</span> Prediction</h1>
+        <p>EcoNerve monitors environmental data in real time, forecasts future climate risks, and recommends actionable green solutions for next-generation cities.</p>
+        <div class="hero-buttons">
+            <!--<a href="#cta" class="btn btn-primary">🚀 Get Started</a>-->
+            <button class="btn primary" id="getStartedBtn">Get Started</button>
+            <a href="#dashboard" class="btn btn-secondary">📊 View Live Data</a>
+        </div>
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <h3 id="heroCounter1">0+</h3>
+                <p>Cities Monitored</p>
+            </div>
+            <div class="hero-stat">
+                <h3 id="heroCounter2">0%</h3>
+                <p>Prediction Accuracy</p>
+            </div>
+            <div class="hero-stat">
+                <h3 id="heroCounter3">0+</h3>
+                <p>Active Sensors</p>
+            </div>
+        </div>
+    </div>
+    <div class="scroll-indicator">
+        <div><span></span></div>
+    </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+    <div class="section-header reveal">
+        <span class="tag">🌿 Features</span>
+        <h2>What Makes EcoNerve Special</h2>
+        <p>Cutting-edge technology combined with environmental science to protect our planet.</p>
+    </div>
+    <div class="features-grid">
+        <div class="feature-card reveal reveal-delay-1">
+            <div class="feature-icon green">🌬️</div>
+            <h3>Air Quality Monitoring</h3>
+            <p>Track AQI levels in real time with high-precision environmental sensors deployed across the city.</p>
+        </div>
+        <div class="feature-card reveal reveal-delay-2">
+            <div class="feature-icon blue">💧</div>
+            <h3>Water Quality Analysis</h3>
+            <p>Monitor pH, contaminants, dissolved oxygen, and purity levels instantly with smart probes.</p>
+        </div>
+        <div class="feature-card reveal reveal-delay-3">
+            <div class="feature-icon purple">🧠</div>
+            <h3>AI Pollution Prediction</h3>
+            <p>Machine learning models forecast pollution spikes 6–24 hours in advance with 97% accuracy.</p>
+        </div>
+        <div class="feature-card reveal reveal-delay-4">
+            <div class="feature-icon orange">🔔</div>
+            <h3>Instant Alerts</h3>
+            <p>Get push notifications, SMS, and email alerts when air or water quality becomes hazardous.</p>
+        </div>
+        <div class="feature-card reveal reveal-delay-5">
+            <div class="feature-icon red">📊</div>
+            <h3>Community Dashboard</h3>
+            <p>City-wide data visualization with interactive maps for better environmental decision-making.</p>
+        </div>
+    </div>
+</section>
+
+<!-- DASHBOARD -->
+<section id="dashboard" class="dashboard-section">
+    <div class="section-header reveal">
+        <span class="tag">📡 Live Data</span>
+        <h2>Real-Time Dashboard</h2>
+        <p>See what's happening in the environment right now.</p>
+    </div>
+    <div class="dashboard-grid">
+        <div class="data-card reveal reveal-delay-1">
+            <div class="data-card-header">
+                <h3>Air Quality Index</h3>
+                <div class="icon">🌬️</div>
+            </div>
+            <div class="data-value" id="aqiValue">85</div>
+            <div class="data-label" id="aqiLabel">⚠️ Loading...</div>
+            <div class="data-bar">
+                <div class="data-bar-fill" id="aqiBar" style="width: 0%;"></div>
+            </div>
+        </div>
+        <div class="data-card reveal reveal-delay-2">
+            <div class="data-card-header">
+                <h3>Water pH Level</h3>
+                <div class="icon">💧</div>
+            </div>
+            <div class="data-value" id="phValue">7.2</div>
+            <div class="data-label" id="phLabel">✅ Safe</div>
+            <div class="data-bar">
+                <div class="data-bar-fill bar-good" id="phBar" style="width: 0%;"></div>
+            </div>
+        </div>
+        <div class="data-card reveal reveal-delay-3">
+            <div class="data-card-header">
+                <h3>Temperature</h3>
+                <div class="icon">🌡️</div>
+            </div>
+            <div class="data-value" id="tempValue">28°C</div>
+            <div class="data-label" id="tempLabel">✅ Normal</div>
+            <div class="data-bar">
+                <div class="data-bar-fill bar-good" id="tempBar" style="width: 0%;"></div>
+            </div>
+        </div>
+        <div class="data-card reveal reveal-delay-4">
+            <div class="data-card-header">
+                <h3>Humidity</h3>
+                <div class="icon">💦</div>
+            </div>
+            <div class="data-value" id="humValue">62%</div>
+            <div class="data-label status-good" id="humLabel">✅ Comfortable</div>
+            <div class="data-bar">
+                <div class="data-bar-fill bar-good" id="humBar" style="width: 0%;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AQI GAUGE -->
+    <div class="aqi-gauge-container reveal">
+        <h3>🎯 AQI Classification Scale</h3>
+        <div class="aqi-pointer-container">
+            <div class="aqi-pointer" id="aqiPointer">▼</div>
+        </div>
+        <div class="aqi-scale">
+            <div class="aqi-scale-segment good-seg">Good</div>
+            <div class="aqi-scale-segment moderate-seg">Moderate</div>
+            <div class="aqi-scale-segment unhealthy-sensitive-seg">Sensitive</div>
+            <div class="aqi-scale-segment unhealthy-seg">Unhealthy</div>
+            <div class="aqi-scale-segment very-unhealthy-seg">Very Unhealthy</div>
+            <div class="aqi-scale-segment hazardous-seg">Hazardous</div>
+        </div>
+        <div class="aqi-scale-labels">
+            <span>0</span>
+            <span>50</span>
+            <span>100</span>
+            <span>150</span>
+            <span>200</span>
+            <span>300</span>
+            <span>500</span>
+        </div>
+        <div class="aqi-info-row">
+            <div class="aqi-info-item">
+                <div class="label">Current AQI</div>
+                <div class="value" id="gaugeAqiValue">85</div>
+            </div>
+            <div class="aqi-info-item">
+                <div class="label">Category</div>
+                <div class="value" id="gaugeCategory">--</div>
+            </div>
+            <div class="aqi-info-item">
+                <div class="label">Health Advisory</div>
+                <div class="value" id="gaugeAdvisory" style="font-size:13px;">--</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CHART -->
+    <div class="chart-container reveal">
+        <div class="chart-header">
+            <h3>📈 24-Hour AQI Trend</h3>
+            <div class="chart-legend">
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #4ade80; box-shadow: 0 0 8px rgba(74,222,128,0.5);"></div>
+                    AQI
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #3b82f6; box-shadow: 0 0 8px rgba(59,130,246,0.5);"></div>
+                    Predicted
+                </div>
+            </div>
+        </div>
+        <div class="canvas-wrap">
+            <canvas id="liveChart"></canvas>
+        </div>
+    </div>
+</section>
+
+<!-- CHECK SECTION -->
+<div class="check-section">
+    <div class="check-card reveal">
+        <h3>🔍 Check Your Area's Environment</h3>
+        <p>Enter your city or zip code to see local AQI, water quality, and health recommendations</p>
+        <div class="location-input">
+            <input type="text" id="locationInput" placeholder="Enter city or zip code...">
+            <button class="btn btn-green" onclick="checkLocation()">Check</button>
+        </div>
+        <div class="result-area" id="resultArea">
+            <div class="result-header" id="resultHeader">📍 Results</div>
+            <div class="result-grid">
+                <div class="result-item">
+                    <h4>AQI Level</h4>
+                    <div class="value" id="resultAqi">--</div>
+                    <div style="font-size:11px; margin-top:4px;" id="resultAqiCategory"></div>
+                </div>
+                <div class="result-item">
+                    <h4>Water pH</h4>
+                    <div class="value" id="resultPh">--</div>
+                    <div style="font-size:11px; margin-top:4px;" id="resultPhStatus"></div>
+                </div>
+                <div class="result-item">
+                    <h4>Risk Level</h4>
+                    <div class="value" id="resultRisk">--</div>
+                    <div style="font-size:11px; margin-top:4px;" id="resultRiskDetail"></div>
+                </div>
+            </div>
+            <div class="result-recommendation" id="resultRecommendation">
+                <h4>💡 Health Recommendation</h4>
+                <p id="recommendationText">--</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section id="how" class="how-section">
+    <div class="section-header reveal">
+        <span class="tag">⚙️ Process</span>
+        <h2>How EcoNerve Works</h2>
+        <p>Three simple steps to a healthier environment.</p>
+    </div>
+    <div class="steps-grid">
+        <div class="step-card reveal reveal-delay-1">
+            <span class="step-icon">📡</span>
+            <div class="step-number">1</div>
+            <h3>Collect Data</h3>
+            <p>Smart sensors deployed across the city continuously collect air, water, and environmental data 24/7.</p>
+        </div>
+        <div class="step-card reveal reveal-delay-2">
+            <span class="step-icon">🧠</span>
+            <div class="step-number">2</div>
+            <h3>AI Analysis</h3>
+            <p>Advanced machine learning algorithms analyze patterns and predict future environmental conditions accurately.</p>
+        </div>
+        <div class="step-card reveal reveal-delay-3">
+            <span class="step-icon">🔔</span>
+            <div class="step-number">3</div>
+            <h3>Smart Alerts</h3>
+            <p>Users receive real-time safety alerts and actionable health recommendations through the EcoNerve platform.</p>
+        </div>
+    </div>
+</section>
+
+<!-- IMPACT -->
+<section id="impact" class="impact-section">
+    <div class="section-header reveal">
+        <span class="tag" style="background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.9); border-color: rgba(255,255,255,0.15);">🌍 Impact</span>
+        <h2>Our Global Impact</h2>
+        <p>Making cities healthier, one data point at a time.</p>
+    </div>
+    <div class="impact-grid">
+        <div class="impact-stat reveal reveal-delay-1">
+            <span class="stat-icon">🏘️</span>
+            <h2><span class="counter" data-target="500">0</span>+</h2>
+            <div class="divider"></div>
+            <p>Communities Protected</p>
+        </div>
+        <div class="impact-stat reveal reveal-delay-2">
+            <span class="stat-icon">📊</span>
+            <h2><span class="counter" data-target="10000">0</span>+</h2>
+            <div class="divider"></div>
+            <p>Data Points Daily</p>
+        </div>
+        <div class="impact-stat reveal reveal-delay-3">
+            <span class="stat-icon">🎯</span>
+            <h2><span class="counter" data-target="97">0</span>%</h2>
+            <div class="divider"></div>
+            <p>Prediction Accuracy</p>
+        </div>
+        <div class="impact-stat reveal reveal-delay-4">
+            <span class="stat-icon">⏰</span>
+            <h2><span class="counter" data-target="24">0</span>/7</h2>
+            <div class="divider"></div>
+            <p>Real-Time Monitoring</p>
+        </div>
+    </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+    <div class="section-header reveal">
+        <span class="tag">💬 Testimonials</span>
+        <h2>What People Say</h2>
+    </div>
+    <div class="testimonial-slider reveal">
+        <div class="testimonial active" data-index="0">
+            <div class="testimonial-card">
+                <p class="testimonial-text">EcoNerve has transformed how our city manages air quality. The predictive alerts have helped us reduce pollution exposure by 40%.</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">DR</div>
+                    <div class="author-info">
+                        <h4>Dr. Rajan Mehta</h4>
+                        <p>Environmental Officer, Mumbai</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="testimonial" data-index="1">
+            <div class="testimonial-card">
+                <p class="testimonial-text">The water quality monitoring saved our community from a contamination event. We got alerts 12 hours before it became critical.</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">SP</div>
+                    <div class="author-info">
+                        <h4>Sarah Park</h4>
+                        <p>Community Leader, Seoul</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="testimonial" data-index="2">
+            <div class="testimonial-card">
+                <p class="testimonial-text">As a researcher, the data granularity and AI predictions from EcoNerve are unmatched. It's a game-changer for climate science.</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">JL</div>
+                    <div class="author-info">
+                        <h4>Prof. James Liu</h4>
+                        <p>Climate Researcher, Stanford</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slider-dots">
+            <button class="slider-dot active" onclick="showTestimonial(0)"></button>
+            <button class="slider-dot" onclick="showTestimonial(1)"></button>
+            <button class="slider-dot" onclick="showTestimonial(2)"></button>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section id="cta" class="cta-section">
+
+
+
+
+    
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-grid">
+        <div class="footer-brand">
+            <h3>🌿 Eco<span>Nerve</span></h3>
+            <p>AI-powered environmental monitoring for a sustainable future. Protecting communities with smart technology and nature's wisdom.</p>
+        </div>
+        <div class="footer-links">
+            <h4>Product</h4>
+            <a href="#">Features</a>
+            <a href="#">Pricing</a>
+            <a href="#">API</a>
+            <a href="#">Documentation</a>
+        </div>
+        <div class="footer-links">
+            <h4>Company</h4>
+            <a href="#">About</a>
+            <a href="#">Blog</a>
+            <a href="#">Careers</a>
+            <a href="#">Contact</a>
+        </div>
+        <div class="footer-links">
+            <h4>Legal</h4>
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+            <a href="#">Cookie Policy</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2026 EcoNerve. All rights reserved. 🌍</p>
+        <div class="social-links">
+            <div class="social-link">𝕏</div>
+            <div class="social-link">in</div>
+            <div class="social-link">GH</div>
+            <div class="social-link">YT</div>
+        </div>
+    </div>
+</footer>
+
+<!-- BACK TO TOP -->
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ==========================================
+// CORRECT AQI CLASSIFICATION SYSTEM
+// Based on EPA AQI Breakpoints
+// ==========================================
+
+function getAqiInfo(aqi) {
+    if (aqi <= 50) {
+        return {
+            category: 'Good',
+            emoji: '✅',
+            statusClass: 'status-good',
+            barClass: 'bar-good',
+            color: '#4ade80',
+            advisory: 'Air quality is satisfactory. Enjoy outdoor activities!',
+            risk: 'Low',
+            riskDetail: 'No health risk',
+            recommendation: 'Air quality is excellent. Perfect for outdoor exercise, walks in nature, and all activities. No precautions needed.',
+            healthImpact: 'No health impacts expected.'
+        };
+    } else if (aqi <= 100) {
+        return {
+            category: 'Moderate',
+            emoji: '⚠️',
+            statusClass: 'status-warning',
+            barClass: 'bar-warning',
+            color: '#fbbf24',
+            advisory: 'Acceptable. Sensitive groups should limit prolonged outdoor exertion.',
+            risk: 'Moderate',
+            riskDetail: 'Sensitive groups at risk',
+            recommendation: 'Air quality is acceptable. However, unusually sensitive people should consider reducing prolonged outdoor exertion. Keep windows partially closed.',
+            healthImpact: 'May cause minor breathing discomfort for sensitive individuals.'
+        };
+    } else if (aqi <= 150) {
+        return {
+            category: 'Unhealthy for Sensitive Groups',
+            emoji: '🟠',
+            statusClass: 'status-warning',
+            barClass: 'bar-warning',
+            color: '#f97316',
+            advisory: 'Sensitive groups (elderly, children, asthma) should reduce outdoor activity.',
+            risk: 'High',
+            riskDetail: 'Health effects for sensitive groups',
+            recommendation: 'People with respiratory or heart disease, the elderly, and children should limit prolonged outdoor exertion. Everyone else should reduce extended outdoor activities.',
+            healthImpact: 'Increasing likelihood of respiratory symptoms in sensitive individuals.'
+        };
+    } else if (aqi <= 200) {
+        return {
+            category: 'Unhealthy',
+            emoji: '🔴',
+            statusClass: 'status-danger',
+            barClass: 'bar-danger',
+            color: '#f87171',
+            advisory: 'Everyone may experience health effects. Sensitive groups more seriously.',
+            risk: 'High',
+            riskDetail: 'Health effects for everyone',
+            recommendation: 'Everyone should reduce prolonged outdoor exertion. Sensitive groups should avoid all outdoor physical activity. Use air purifiers indoors and wear masks (N95) if going outside.',
+            healthImpact: 'Everyone may begin to experience health effects; sensitive groups may experience more serious effects.'
+        };
+    } else if (aqi <= 300) {
+        return {
+            category: 'Very Unhealthy',
+            emoji: '🟣',
+            statusClass: 'status-hazardous',
+            barClass: 'bar-hazardous',
+            color: '#c084fc',
+            advisory: 'Health alert! Everyone should avoid outdoor exertion.',
+            risk: 'Very High',
+            riskDetail: 'Serious health effects for everyone',
+            recommendation: 'HEALTH ALERT: Everyone should avoid all outdoor physical activity. Stay indoors with air purifiers running. Keep all windows and doors closed. Wear N95 masks if you must go outside.',
+            healthImpact: 'Health warnings of emergency conditions. Entire population is likely to be affected.'
+        };
+    } else {
+        return {
+            category: 'Hazardous',
+            emoji: '☠️',
+            statusClass: 'status-severe',
+            barClass: 'bar-severe',
+            color: '#991b1b',
+            advisory: 'EMERGENCY! Everyone should stay indoors immediately.',
+            risk: 'Severe',
+            riskDetail: 'Emergency health warning',
+            recommendation: 'HEALTH EMERGENCY: Do NOT go outside. Stay indoors with doors and windows sealed. Run air purifiers on maximum. If you must go outside, wear N95/P100 respirator. Seek medical attention if experiencing symptoms.',
+            healthImpact: 'Health alert: everyone may experience serious health effects. Emergency conditions.'
+        };
+    }
+}
+
+function getPhInfo(ph) {
+    if (ph >= 6.5 && ph <= 8.5) {
+        return { status: '✅ Safe', statusClass: 'status-good', detail: 'Within WHO standards' };
+    } else if (ph >= 6.0 && ph < 6.5) {
+        return { status: '⚠️ Slightly Acidic', statusClass: 'status-warning', detail: 'Below optimal range' };
+    } else if (ph > 8.5 && ph <= 9.0) {
+        return { status: '⚠️ Slightly Alkaline', statusClass: 'status-warning', detail: 'Above optimal range' };
+    } else if (ph < 6.0) {
+        return { status: '🔴 Too Acidic', statusClass: 'status-danger', detail: 'Unsafe for consumption' };
+    } else {
+        return { status: '🔴 Too Alkaline', statusClass: 'status-danger', detail: 'Unsafe for consumption' };
+    }
+}
+
+function getTempInfo(temp) {
+    if (temp >= 20 && temp <= 30) {
+        return { status: '✅ Normal', statusClass: 'status-good', barClass: 'bar-good' };
+    } else if (temp > 30 && temp <= 38) {
+        return { status: '⚠️ Warm', statusClass: 'status-warning', barClass: 'bar-warning' };
+    } else if (temp > 38) {
+        return { status: '🔴 Hot', statusClass: 'status-danger', barClass: 'bar-danger' };
+    } else if (temp >= 10 && temp < 20) {
+        return { status: '⚠️ Cool', statusClass: 'status-warning', barClass: 'bar-warning' };
+    } else {
+        return { status: '🔴 Cold', statusClass: 'status-danger', barClass: 'bar-danger' };
+    }
+}
+
+function getHumInfo(hum) {
+    if (hum >= 30 && hum <= 60) {
+        return { status: '✅ Comfortable', statusClass: 'status-good' };
+    } else if ((hum > 60 && hum <= 75) || (hum >= 20 && hum < 30)) {
+        return { status: '⚠️ Moderate', statusClass: 'status-warning' };
+    } else {
+        return { status: '🔴 Extreme', statusClass: 'status-danger' };
+    }
+}
+
+// Update AQI pointer position on gauge
+function updateAqiPointer(aqi) {
+    const pointer = document.getElementById('aqiPointer');
+    const maxAqi = 500;
+    const percentage = Math.min((aqi / maxAqi) * 100, 100);
+    pointer.style.left = percentage + '%';
+
+    const info = getAqiInfo(aqi);
+    pointer.style.color = info.color;
+
+    document.getElementById('gaugeAqiValue').textContent = aqi;
+    document.getElementById('gaugeAqiValue').style.color = info.color;
+    document.getElementById('gaugeCategory').textContent = info.category;
+    document.getElementById('gaugeCategory').style.color = info.color;
+    document.getElementById('gaugeAdvisory').textContent = info.advisory;
+}
+
+// ==========================================
+// LOADER
+// ==========================================
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        document.getElementById('loader').classList.add('hidden');
+    }, 1800);
+});
+
+// ==========================================
+// PARTICLES + LEAVES
+// ==========================================
+function createParticles() {
+    const container = document.getElementById('particles');
+    const leaves = ['🍃', '🌿', '🍂', '☘️', '🌱'];
+
+    for (let i = 0; i < 15; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+        particle.style.animationDelay = (Math.random() * 10) + 's';
+        particle.style.width = particle.style.height = (Math.random() * 4 + 2) + 'px';
+        particle.style.background = `rgba(74, 222, 128, ${Math.random() * 0.3 + 0.1})`;
+        container.appendChild(particle);
+    }
+
+    for (let i = 0; i < 8; i++) {
+        const leaf = document.createElement('div');
+        leaf.classList.add('particle', 'leaf');
+        leaf.textContent = leaves[Math.floor(Math.random() * leaves.length)];
+        leaf.style.left = Math.random() * 100 + '%';
+        leaf.style.animationDuration = (Math.random() * 15 + 15) + 's';
+        leaf.style.animationDelay = (Math.random() * 15) + 's';
+        leaf.style.fontSize = (Math.random() * 12 + 10) + 'px';
+        container.appendChild(leaf);
+    }
+}
+createParticles();
+
+// ==========================================
+// NAVBAR SCROLL
+// ==========================================
+const header = document.getElementById('header');
+const backToTop = document.getElementById('backToTop');
+
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+    } else {
+        header.classList.remove('scrolled');
+    }
+
+    if (window.scrollY > 500) {
+        backToTop.classList.add('visible');
+    } else {
+        backToTop.classList.remove('visible');
+    }
+
+    const sections = document.querySelectorAll('section[id]');
+    const scrollPos = window.scrollY + 100;
+    sections.forEach(section => {
+        if (scrollPos >= section.offsetTop && scrollPos < section.offsetTop + section.offsetHeight) {
+            const id = section.getAttribute('id');
+            document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+            const activeLink = document.querySelector(`nav a[href="#${id}"]`);
+            if (activeLink) activeLink.classList.add('active');
+        }
+    });
+});
+
+// ==========================================
+// HAMBURGER MENU
+// ==========================================
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+const overlay = document.getElementById('overlay');
+
+hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('active');
+    mobileMenu.classList.toggle('active');
+    overlay.classList.toggle('active');
+});
+
+overlay.addEventListener('click', () => {
+    hamburger.classList.remove('active');
+    mobileMenu.classList.remove('active');
+    overlay.classList.remove('active');
+});
+
+document.querySelectorAll('.mobile-menu a').forEach(link => {
+    link.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        mobileMenu.classList.remove('active');
+        overlay.classList.remove('active');
+    });
+});
+
+// ==========================================
+// REVEAL ON SCROLL
+// ==========================================
+const revealElements = document.querySelectorAll('.reveal');
+const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+        }
+    });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+revealElements.forEach(el => revealObserver.observe(el));
+
+// ==========================================
+// COUNTERS
+// ==========================================
+function animateCounter(element, target, suffix = '') {
+    let current = 0;
+    const increment = target / 60;
+    const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+            current = target;
+            clearInterval(timer);
+        }
+        element.textContent = Math.floor(current).toLocaleString() + suffix;
+    }, 25);
+}
+
+setTimeout(() => {
+    animateCounter(document.getElementById('heroCounter1'), 150, '+');
+    animateCounter(document.getElementById('heroCounter2'), 97, '%');
+    animateCounter(document.getElementById('heroCounter3'), 5000, '+');
+}, 2000);
+
+const counterElements = document.querySelectorAll('.counter');
+const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const target = parseInt(entry.target.dataset.target);
+            animateCounter(entry.target, target, '');
+            counterObserver.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.5 });
+
+counterElements.forEach(el => counterObserver.observe(el));
+
+// ==========================================
+// DASHBOARD - LIVE DATA WITH CORRECT AQI
+// ==========================================
+
+let currentAqi = 85;
+let currentPh = 7.2;
+let currentTemp = 28;
+let currentHum = 62;
+
+function updateDashboardAqi(aqi) {
+    const info = getAqiInfo(aqi);
+
+    document.getElementById('aqiValue').textContent = aqi;
+    const aqiLabel = document.getElementById('aqiLabel');
+    aqiLabel.textContent = info.emoji + ' ' + info.category;
+    aqiLabel.className = 'data-label ' + info.statusClass;
+
+    const aqiBar = document.getElementById('aqiBar');
+    aqiBar.className = 'data-bar-fill ' + info.barClass;
+    aqiBar.style.width = Math.min((aqi / 500) * 100, 100) + '%';
+
+    updateAqiPointer(aqi);
+}
+
+function updateDashboardPh(ph) {
+    const info = getPhInfo(ph);
+    document.getElementById('phValue').textContent = ph.toFixed(1);
+    const phLabel = document.getElementById('phLabel');
+    phLabel.textContent = info.status;
+    phLabel.className = 'data-label ' + info.statusClass;
+}
+
+function updateDashboardTemp(temp) {
+    const info = getTempInfo(temp);
+    document.getElementById('tempValue').textContent = temp + '°C';
+    const tempLabel = document.getElementById('tempLabel');
+    tempLabel.textContent = info.status;
+    tempLabel.className = 'data-label ' + info.statusClass;
+
+    const tempBar = document.getElementById('tempBar');
+    tempBar.className = 'data-bar-fill ' + info.barClass;
+}
+
+function updateDashboardHum(hum) {
+    const info = getHumInfo(hum);
+    document.getElementById('humValue').textContent = hum + '%';
+    const humLabel = document.getElementById('humLabel');
+    humLabel.textContent = info.status;
+    humLabel.className = 'data-label ' + info.statusClass;
+}
+
+// Initial update
+function initDashboard() {
+    updateDashboardAqi(currentAqi);
+    updateDashboardPh(currentPh);
+    updateDashboardTemp(currentTemp);
+    updateDashboardHum(currentHum);
+}
+
+// Animate bars on scroll into view
+const dashboardSection = document.getElementById('dashboard');
+const barObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            setTimeout(() => {
+                initDashboard();
+                document.getElementById('phBar').style.width = '72%';
+                document.getElementById('tempBar').style.width = '45%';
+                document.getElementById('humBar').style.width = '62%';
+            }, 500);
+            barObserver.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.3 });
+
+barObserver.observe(dashboardSection);
+
+// Live update every 5 seconds with realistic variation
+function updateLiveData() {
+    // AQI: random walk with bounds
+    const aqiDelta = Math.floor(Math.random() * 15 - 7);
+    currentAqi = Math.max(15, Math.min(350, currentAqi + aqiDelta));
+    updateDashboardAqi(currentAqi);
+
+    // pH: small variation
+    const phDelta = (Math.random() * 0.3 - 0.15);
+    currentPh = Math.max(5.5, Math.min(9.5, currentPh + phDelta));
+    updateDashboardPh(currentPh);
+
+    // Temperature
+    const tempDelta = Math.floor(Math.random() * 3 - 1);
+    currentTemp = Math.max(15, Math.min(45, currentTemp + tempDelta));
+    updateDashboardTemp(currentTemp);
+
+    // Humidity
+    const humDelta = Math.floor(Math.random() * 5 - 2);
+    currentHum = Math.max(15, Math.min(95, currentHum + humDelta));
+    updateDashboardHum(currentHum);
+}
+
+setInterval(updateLiveData, 5000);
+
+// ==========================================
+// CANVAS CHART
+// ==========================================
+const canvas = document.getElementById('liveChart');
+const ctx = canvas.getContext('2d');
+let chartData = [];
+let predictedData = [];
+
+function initChart() {
+    for (let i = 0; i < 24; i++) {
+        chartData.push(40 + Math.random() * 80);
+        predictedData.push(45 + Math.random() * 70);
+    }
+}
+
+function drawChart() {
+    const rect = canvas.parentElement.getBoundingClientRect();
+    canvas.width = rect.width * 2;
+    canvas.height = rect.height * 2;
+    ctx.scale(2, 2);
+
+    const w = rect.width;
+    const h = rect.height;
+    const padding = { top: 20, right: 20, bottom: 30, left: 40 };
+    const chartW = w - padding.left - padding.right;
+    const chartH = h - padding.top - padding.bottom;
+
+    ctx.clearRect(0, 0, w, h);
+
+    // Grid lines
+    ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i <= 4; i++) {
+        const y = padding.top + (chartH / 4) * i;
+        ctx.beginPath();
+        ctx.moveTo(padding.left, y);
+        ctx.lineTo(w - padding.right, y);
+        ctx.stroke();
+
+        ctx.fillStyle = 'rgba(255,255,255,0.35)';
+        ctx.font = '10px Poppins';
+        ctx.textAlign = 'right';
+        ctx.fillText(Math.round(200 - (200 / 4) * i), padding.left - 8, y + 4);
+    }
+
+    // AQI zone backgrounds
+    const zones = [
+        { max: 50, color: 'rgba(74, 222, 128, 0.04)' },
+        { max: 100, color: 'rgba(251, 191, 36, 0.04)' },
+        { max: 150, color: 'rgba(249, 115, 22, 0.04)' },
+        { max: 200, color: 'rgba(248, 113, 113, 0.04)' }
+    ];
+
+    zones.forEach(zone => {
+        const yTop = padding.top + chartH - (zone.max / 200) * chartH;
+        const yBottom = padding.top + chartH;
+        ctx.fillStyle = zone.color;
+        ctx.fillRect(padding.left, yTop, chartW, yBottom - yTop);
+    });
+
+    // X labels
+    ctx.fillStyle = 'rgba(255,255,255,0.35)';
+    ctx.font = '10px Poppins';
+    ctx.textAlign = 'center';
+    for (let i = 0; i < 24; i += 3) {
+        const x = padding.left + (chartW / 23) * i;
+        ctx.fillText(i + ':00', x, h - 8);
+    }
+
+    // Predicted line (dashed)
+    ctx.beginPath();
+    ctx.strokeStyle = 'rgba(59, 130, 246, 0.35)';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([6, 4]);
+    predictedData.forEach((val, i) => {
+        const x = padding.left + (chartW / 23) * i;
+        const y = padding.top + chartH - (Math.min(val, 200) / 200) * chartH;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Main line - gradient fill
+    ctx.beginPath();
+    chartData.forEach((val, i) => {
+        const x = padding.left + (chartW / 23) * i;
+        const y = padding.top + chartH - (Math.min(val, 200) / 200) * chartH;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+    });
+
+    const lastX = padding.left + chartW;
+    ctx.lineTo(lastX, padding.top + chartH);
+    ctx.lineTo(padding.left, padding.top + chartH);
+    ctx.closePath();
+
+    const gradient = ctx.createLinearGradient(0, padding.top, 0, padding.top + chartH);
+    gradient.addColorStop(0, 'rgba(74, 222, 128, 0.15)');
+    gradient.addColorStop(1, 'rgba(74, 222, 128, 0)');
+    ctx.fillStyle = gradient;
+    ctx.fill();
+
+    // Stroke main line
+    ctx.beginPath();
+    ctx.strokeStyle = '#4ade80';
+    ctx.lineWidth = 2.5;
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    chartData.forEach((val, i) => {
+        const x = padding.left + (chartW / 23) * i;
+        const y = padding.top + chartH - (Math.min(val, 200) / 200) * chartH;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+
+    // Glow effect
+    ctx.beginPath();
+    ctx.strokeStyle = 'rgba(74, 222, 128, 0.2)';
+    ctx.lineWidth = 6;
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    chartData.forEach((val, i) => {
+        const x = padding.left + (chartW / 23) * i;
+        const y = padding.top + chartH - (Math.min(val, 200) / 200) * chartH;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+
+    // Dots with color based on AQI value
+    chartData.forEach((val, i) => {
+        if (i % 3 === 0) {
+            const x = padding.left + (chartW / 23) * i;
+            const y = padding.top + chartH - (Math.min(val, 200) / 200) * chartH;
+            const dotInfo = getAqiInfo(Math.round(val));
+
+            ctx.beginPath();
+            ctx.arc(x, y, 5, 0, Math.PI * 2);
+            ctx.fillStyle = dotInfo.color;
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(0,0,0,0.3)';
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(x, y, 2, 0, Math.PI * 2);
+            ctx.fillStyle = 'white';
+            ctx.fill();
+        }
+    });
+}
+
+initChart();
+
+const chartObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            drawChart();
+            chartObserver.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.3 });
+
+chartObserver.observe(canvas);
+
+window.addEventListener('resize', () => {
+    if (canvas.getBoundingClientRect().width > 0) {
+        drawChart();
+    }
+});
+
+setInterval(() => {
+    chartData.shift();
+    chartData.push(40 + Math.random() * 80);
+    predictedData.shift();
+    predictedData.push(45 + Math.random() * 70);
+    if (canvas.getBoundingClientRect().width > 0) {
+        drawChart();
+    }
+}, 4000);
+
+// ==========================================
+// CHECK LOCATION - WITH CORRECT AQI LOGIC
+// ==========================================
+function checkLocation() {
+    const input = document.getElementById('locationInput').value.trim();
+    if (!input) {
+        showToast('⚠️ Please enter a city or zip code');
+        return;
+    }
+
+    const resultArea = document.getElementById('resultArea');
+    resultArea.style.display = 'block';
+
+    // Generate realistic AQI based on "location" hash
+    let hash = 0;
+    for (let i = 0; i < input.length; i++) {
+        hash = ((hash << 5) - hash) + input.charCodeAt(i);
+        hash = hash & hash;
+    }
+
+    const seed = Math.abs(hash);
+    const aqi = (seed % 300) + 20; // 20-320 range
+    const ph = parseFloat((6.0 + (seed % 30) / 10).toFixed(1));
+
+    const aqiInfo = getAqiInfo(aqi);
+    const phInfo = getPhInfo(ph);
+
+    // Set AQI result
+    const resultAqiEl = document.getElementById('resultAqi');
+    resultAqiEl.textContent = aqi;
+    resultAqiEl.style.color = aqiInfo.color;
+
+    const resultAqiCat = document.getElementById('resultAqiCategory');
+    resultAqiCat.textContent = aqiInfo.emoji + ' ' + aqiInfo.category;
+    resultAqiCat.style.color = aqiInfo.color;
+
+    // Set pH result
+    const resultPhEl = document.getElementById('resultPh');
+    resultPhEl.textContent = ph;
+    resultPhEl.style.color = phInfo.statusClass === 'status-good' ? '#4ade80' :
+                              phInfo.statusClass === 'status-warning' ? '#fbbf24' : '#f87171';
+
+    const resultPhStatus = document.getElementById('resultPhStatus');
+    resultPhStatus.textContent = phInfo.detail;
+
+    // Set Risk based on AQI
+    const resultRiskEl = document.getElementById('resultRisk');
+    resultRiskEl.textContent = aqiInfo.risk;
+    resultRiskEl.style.color = aqiInfo.color;
+
+    const resultRiskDetail = document.getElementById('resultRiskDetail');
+    resultRiskDetail.textContent = aqiInfo.riskDetail;
+    resultRiskDetail.style.color = aqiInfo.color;
+
+    // Recommendation
+    document.getElementById('recommendationText').textContent = aqiInfo.recommendation;
+
+    document.getElementById('resultHeader').textContent = '📍 Results for "' + input + '"';
+
+    showToast(`✅ Environmental data loaded for "${input}" — AQI: ${aqi} (${aqiInfo.category})`);
+}
+
+document.getElementById('locationInput').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') checkLocation();
+});
+
+// ==========================================
+// TESTIMONIAL SLIDER
+// ==========================================
+let currentTestimonial = 0;
+const testimonials = document.querySelectorAll('.testimonial');
+const dots = document.querySelectorAll('.slider-dot');
+
+function showTestimonial(index) {
+    testimonials.forEach(t => t.classList.remove('active'));
+    dots.forEach(d => d.classList.remove('active'));
+    testimonials[index].classList.add('active');
+    dots[index].classList.add('active');
+    currentTestimonial = index;
+}
+
+setInterval(() => {
+    currentTestimonial = (currentTestimonial + 1) % testimonials.length;
+    showTestimonial(currentTestimonial);
+}, 5000);
+
+
+// ==========================================
+// TOAST
+// ==========================================
+function showToast(message) {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.classList.add('show');
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 4000);
+}
+
+// ==========================================
+// INITIAL SETUP AFTER LOAD
+// ==========================================
+setTimeout(() => {
+    initDashboard();
+}, 2200);
+</script>
+<div class="page-transition"></div>
+
+</body>
+</html>

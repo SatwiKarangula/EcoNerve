@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoNerve — Green Energy for Sustainable Development</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #060d08;
+  --bg-card: rgba(13, 23, 15, 0.75);
+  --bg-glass: rgba(15, 30, 18, 0.55);
+  --bg-glass-strong: rgba(10, 20, 12, 0.82);
+  --border: rgba(74, 222, 128, 0.1);
+  --border-hover: rgba(74, 222, 128, 0.22);
+  --text: #e8f5e9;
+  --text-sec: #a5d6a7;
+  --green: #4ade80;
+  --green-dim: rgba(74,222,128,0.12);
+  --emerald: #34d399;
+  --lime: #a3e635;
+  --blue: #60a5fa;
+  --yellow: #fbbf24;
+  --orange: #fb923c;
+  --red: #f87171;
+  --pink: #f472b6;
+  --purple: #c084fc;
+  --cyan: #22d3ee;
+  --radius: 18px;
+  --radius-sm: 12px;
+  --shadow: 0 8px 40px rgba(0,0,0,0.5);
+  --transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   REAL FOREST BACKGROUND — matching the reference image
+   ============================================================ */
+.forest-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  /* Real forest image background */
+  background:
+    url('https://images.unsplash.com/photo-1448375240586-882707db888b?w=1920&q=80') center center / cover no-repeat;
+}
+
+/* Dark overlay to make content readable */
+.forest-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg,
+      rgba(3, 8, 4, 0.82) 0%,
+      rgba(5, 12, 6, 0.72) 25%,
+      rgba(4, 10, 5, 0.68) 50%,
+      rgba(3, 8, 4, 0.75) 75%,
+      rgba(2, 6, 3, 0.88) 100%
+    );
+}
+
+/* Subtle green ambient glow */
+.forest-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 800px 500px at 15% 30%, rgba(74,222,128,0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 600px 400px at 80% 60%, rgba(34,211,153,0.03) 0%, transparent 60%),
+    radial-gradient(ellipse 500px 300px at 50% 80%, rgba(74,222,128,0.025) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* Animated fireflies */
+#atmo {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+}
+.firefly {
+  position: absolute;
+  background: radial-gradient(circle, rgba(74,222,128,0.9), rgba(163,230,53,0.4) 40%, transparent 70%);
+  border-radius: 50%;
+  animation: floatFirefly linear infinite;
+  opacity: 0;
+  filter: blur(0.3px);
+}
+@keyframes floatFirefly {
+  0% { opacity:0; transform: translate(0,0) scale(0.5); }
+  15% { opacity:0.9; transform: scale(1); }
+  85% { opacity:0.5; }
+  100% { opacity:0; transform: translate(var(--dx), var(--dy)) scale(0.3); }
+}
+.leaf-p {
+  position: absolute; top: -30px;
+  animation: leafFall linear infinite; opacity: 0;
+}
+@keyframes leafFall {
+  0% { transform: translateY(-30px) rotate(0deg) translateX(0); opacity:0; }
+  10% { opacity:0.4; }
+  50% { transform: translateY(50vh) rotate(360deg) translateX(25px); opacity:0.25; }
+  100% { transform: translateY(105vh) rotate(720deg) translateX(-15px); opacity:0; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(74,222,128,0.3); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--green); }
+
+/* ============================================================
+   LOADER
+   ============================================================ */
+#loader {
+  position: fixed; inset: 0; z-index: 10000;
+  background: #040a05;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  transition: opacity 0.8s, visibility 0.8s;
+}
+#loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.loader-wrap { position: relative; width: 80px; height: 80px; margin-bottom: 24px; }
+.loader-ring {
+  width: 80px; height: 80px;
+  border: 3px solid rgba(74,222,128,0.08);
+  border-top-color: var(--green);
+  border-right-color: var(--emerald);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loader-emoji {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2rem;
+  animation: treePulse 1.5s ease-in-out infinite;
+}
+@keyframes treePulse {
+  0%,100% { transform: translate(-50%,-50%) scale(1); }
+  50% { transform: translate(-50%,-50%) scale(1.15); }
+}
+.loader-text { color: var(--green); font-size: 1.2rem; font-weight: 800; letter-spacing: 4px; }
+.loader-sub { color: var(--text-sec); font-size: 0.55rem; letter-spacing: 3px; margin-top: 6px; text-transform: uppercase; opacity: 0.6; }
+
+/* ============================================================
+   HEADER — Glass style matching reference
+   ============================================================ */
+header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  padding: 12px 28px;
+  background: rgba(8, 16, 10, 0.6);
+  backdrop-filter: blur(25px) saturate(1.4);
+  -webkit-backdrop-filter: blur(25px) saturate(1.4);
+  border-bottom: 1px solid rgba(74,222,128,0.06);
+  display: flex; align-items: center; justify-content: space-between;
+  transition: var(--transition);
+}
+header.scrolled {
+  padding: 8px 28px;
+  background: rgba(6, 12, 7, 0.88);
+  box-shadow: 0 4px 30px rgba(0,0,0,0.4);
+}
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo-icon {
+  width: 38px; height: 38px;
+  background: linear-gradient(135deg, rgba(74,222,128,0.15), rgba(34,211,153,0.1));
+  border: 1px solid rgba(74,222,128,0.15);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; color: var(--green);
+}
+.logo h1 {
+  font-size: 1.15rem; font-weight: 800;
+  background: linear-gradient(135deg, var(--green), var(--emerald));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.logo small {
+  display: block; font-size: 0.45rem; color: var(--text-sec);
+  letter-spacing: 2.5px; text-transform: uppercase;
+  -webkit-text-fill-color: var(--text-sec); opacity: 0.6;
+}
+
+nav { display: flex; gap: 2px; }
+nav a {
+  padding: 8px 16px; border-radius: 8px;
+  color: var(--text-sec); text-decoration: none;
+  font-size: 0.75rem; font-weight: 500;
+  transition: var(--transition);
+}
+nav a:hover { background: rgba(74,222,128,0.08); color: var(--green); }
+nav a.active {
+  background: var(--green);
+  color: #000;
+  font-weight: 700;
+  border-radius: 8px;
+}
+
+.header-right { display: flex; align-items: center; gap: 12px; }
+.live-badge {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 14px; border-radius: 20px;
+  background: rgba(239,68,68,0.1);
+  border: 1px solid rgba(239,68,68,0.2);
+  font-size: 0.65rem; color: #f87171; font-weight: 700;
+  letter-spacing: 1px;
+}
+.live-dot {
+  width: 6px; height: 6px; background: #ef4444; border-radius: 50%;
+  animation: livePulse 1.5s infinite;
+  box-shadow: 0 0 6px rgba(239,68,68,0.5);
+}
+@keyframes livePulse {
+  0%,100% { opacity:1; transform:scale(1); }
+  50% { opacity:0.4; transform:scale(1.6); }
+}
+.update-timer { font-size: 0.6rem; color: var(--text-sec); opacity: 0.5; }
+
+.hamburger {
+  display: none; flex-direction: column; gap: 5px;
+  cursor: pointer; z-index: 1002; background: none; border: none; padding: 5px;
+}
+.hamburger span { width: 20px; height: 2px; background: var(--green); border-radius: 2px; transition: var(--transition); }
+.hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+.hamburger.active span:nth-child(2) { opacity: 0; }
+.hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
+.mobile-menu {
+  position: fixed; top: 0; right: -280px; width: 270px; height: 100vh;
+  background: rgba(8,16,10,0.95); backdrop-filter: blur(20px);
+  z-index: 1001; padding: 80px 20px 20px;
+  transition: right 0.3s ease; display: flex; flex-direction: column; gap: 4px;
+  border-left: 1px solid var(--border);
+}
+.mobile-menu.active { right: 0; }
+.mobile-menu a {
+  padding: 12px 16px; border-radius: 10px; color: var(--text-sec);
+  text-decoration: none; font-size: 0.82rem; transition: var(--transition);
+}
+.mobile-menu a:hover { background: var(--green-dim); color: var(--green); }
+.overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+  z-index: 1000; opacity: 0; visibility: hidden; transition: var(--transition);
+}
+.overlay.active { opacity: 1; visibility: visible; }
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+main { padding-top: 75px; position: relative; z-index: 1; }
+.container { max-width: 1280px; margin: 0 auto; padding: 0 20px; }
+
+.section-head { text-align: center; margin-bottom: 36px; }
+.section-head .badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 16px; border-radius: 20px;
+  background: rgba(74,222,128,0.08);
+  border: 1px solid rgba(74,222,128,0.1);
+  color: var(--green); font-size: 0.6rem; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px;
+}
+.section-head h2 {
+  font-size: 1.8rem; font-weight: 800; color: var(--text);
+}
+.section-head h2 .hl {
+  background: linear-gradient(135deg, var(--green), var(--emerald));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.section-head p { color: var(--text-sec); font-size: 0.8rem; margin-top: 6px; opacity: 0.7; }
+
+/* ============================================================
+   GLASS CARDS — matching reference exactly
+   ============================================================ */
+.glass {
+  background: rgba(12, 22, 14, 0.65);
+  border: 1px solid rgba(74, 222, 128, 0.08);
+  border-radius: var(--radius);
+  backdrop-filter: blur(20px) saturate(1.3);
+  -webkit-backdrop-filter: blur(20px) saturate(1.3);
+  transition: var(--transition);
+}
+.glass:hover {
+  border-color: rgba(74,222,128,0.18);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 35px rgba(0,0,0,0.3), 0 0 15px rgba(74,222,128,0.04);
+}
+.glass-sm {
+  background: rgba(15, 28, 18, 0.5);
+  border: 1px solid rgba(74,222,128,0.06);
+  border-radius: var(--radius-sm);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+/* ============================================================
+   HERO — matching reference layout
+   ============================================================ */
+.hero {
+  padding: 65px 0 45px; text-align: center; position: relative;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 22px; border-radius: 28px;
+  background: rgba(74,222,128,0.08);
+  border: 1px solid rgba(74,222,128,0.12);
+  color: var(--green); font-size: 0.68rem; font-weight: 600;
+  margin-bottom: 22px; letter-spacing: 1px;
+}
+.hero-badge .hb-dot {
+  width: 7px; height: 7px; background: var(--green); border-radius: 50%;
+  animation: livePulse 2s infinite;
+  box-shadow: 0 0 8px rgba(74,222,128,0.4);
+}
+.hero h1 {
+  font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 900;
+  line-height: 1.15; margin-bottom: 16px; color: #fff;
+}
+.hero h1 .gradient {
+  background: linear-gradient(135deg, var(--green), var(--emerald), var(--lime));
+  background-size: 200% auto;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  animation: heroShimmer 4s linear infinite;
+}
+@keyframes heroShimmer { to { background-position: 200% center; } }
+.hero p {
+  color: var(--text-sec); font-size: 0.92rem;
+  max-width: 580px; margin: 0 auto 28px; opacity: 0.8;
+}
+
+/* Hero action buttons — matching reference */
+.hero-actions {
+  display: flex; justify-content: center; gap: 14px;
+  margin-bottom: 36px; flex-wrap: wrap;
+}
+.hero-btn {
+  padding: 12px 28px; border-radius: 12px;
+  font-size: 0.82rem; font-weight: 700;
+  text-decoration: none; display: flex; align-items: center; gap: 8px;
+  transition: var(--transition); cursor: pointer; border: none;
+  font-family: inherit;
+}
+.hero-btn.primary {
+  background: linear-gradient(135deg, var(--green), var(--emerald));
+  color: #000;
+  box-shadow: 0 4px 20px rgba(74,222,128,0.25);
+}
+.hero-btn.primary:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 6px 30px rgba(74,222,128,0.35);
+}
+.hero-btn.secondary {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--text);
+  backdrop-filter: blur(10px);
+}
+.hero-btn.secondary:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(74,222,128,0.2);
+  transform: translateY(-2px);
+}
+
+/* Hero stats — glass cards matching reference */
+.hero-stats {
+  display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+.hero-stat {
+  text-align: center; padding: 18px 28px; min-width: 130px;
+  background: rgba(15, 28, 18, 0.5);
+  border: 1px solid rgba(74,222,128,0.08);
+  border-radius: var(--radius-sm);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: var(--transition);
+}
+.hero-stat:hover {
+  border-color: rgba(74,222,128,0.2);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+}
+.hero-stat .counter {
+  font-size: 1.8rem; font-weight: 900; color: var(--green);
+}
+.hero-stat span {
+  display: block; font-size: 0.58rem; color: var(--text-sec);
+  margin-top: 4px; text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.7;
+}
+
+/* Search */
+.search-wrap { max-width: 520px; margin: 0 auto; position: relative; }
+.search-box {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 18px;
+  background: rgba(12, 22, 14, 0.6);
+  border: 1px solid rgba(74,222,128,0.1);
+  border-radius: 14px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: var(--transition);
+}
+.search-box:focus-within {
+  border-color: rgba(74,222,128,0.3);
+  box-shadow: 0 0 20px rgba(74,222,128,0.08);
+}
+.search-box i { color: var(--green); opacity: 0.5; }
+.search-box input {
+  flex: 1; background: none; border: none; outline: none;
+  color: var(--text); font-size: 0.88rem;
+}
+.search-box input::placeholder { color: rgba(165,214,167,0.3); }
+.search-box button {
+  padding: 9px 20px; border-radius: 10px;
+  background: linear-gradient(135deg, var(--green), var(--emerald));
+  color: #000; font-weight: 700; font-size: 0.78rem;
+  border: none; cursor: pointer; transition: var(--transition);
+  display: flex; align-items: center; gap: 6px; font-family: inherit;
+}
+.search-box button:hover { transform: scale(1.05); box-shadow: 0 4px 20px rgba(74,222,128,0.3); }
+
+.autocomplete {
+  position: absolute; top: calc(100% + 6px); left: 0; right: 0;
+  background: rgba(10, 18, 12, 0.95);
+  border: 1px solid var(--border); border-radius: 12px;
+  overflow: hidden; z-index: 100; box-shadow: var(--shadow);
+  display: none; max-height: 320px; overflow-y: auto;
+  backdrop-filter: blur(20px);
+}
+.autocomplete.show { display: block; }
+.ac-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 16px; cursor: pointer; transition: var(--transition);
+  border-bottom: 1px solid rgba(74,222,128,0.03);
+}
+.ac-item:last-child { border-bottom: none; }
+.ac-item:hover, .ac-item.selected { background: rgba(74,222,128,0.08); }
+.ac-item i { color: var(--green); font-size: 0.75rem; opacity: 0.5; }
+.ac-city { font-weight: 600; font-size: 0.82rem; }
+.ac-state { color: var(--text-sec); font-size: 0.68rem; flex: 1; }
+.ac-aqi { padding: 3px 9px; border-radius: 6px; font-size: 0.58rem; font-weight: 700; }
+
+/* ============================================================
+   CITY RESULT
+   ============================================================ */
+.city-result { display: none; margin-top: 28px; }
+.city-result.show { display: block; }
+.city-header { display: flex; align-items: center; gap: 14px; padding: 20px 24px; margin-bottom: 14px; }
+.city-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+.city-name { font-size: 1.3rem; font-weight: 800; }
+.city-state { font-size: 0.7rem; color: var(--text-sec); }
+.city-time { margin-left: auto; font-size: 0.7rem; color: var(--text-sec); }
+.city-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(135px, 1fr)); gap: 10px; margin-bottom: 14px; }
+.city-stat { background: rgba(15,28,18,0.5); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; text-align: center; backdrop-filter: blur(12px); }
+.cs-icon { font-size: 1.2rem; display: block; margin-bottom: 5px; }
+.cs-val { font-size: 1.4rem; font-weight: 800; display: block; }
+.cs-label { font-size: 0.55rem; color: var(--text-sec); text-transform: uppercase; letter-spacing: 1.5px; }
+.cs-status { display: inline-block; padding: 3px 9px; border-radius: 6px; font-size: 0.55rem; font-weight: 700; margin-top: 5px; }
+.city-gas-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(125px, 1fr)); gap: 8px; margin-bottom: 14px; }
+.city-gas { background: rgba(15,28,18,0.5); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px; }
+.cg-name { font-size: 0.58rem; color: var(--text-sec); text-transform: uppercase; letter-spacing: 1.5px; }
+.cg-val { font-size: 1.05rem; font-weight: 700; margin: 3px 0; }
+.cg-bar { height: 3px; background: rgba(74,222,128,0.06); border-radius: 2px; overflow: hidden; }
+.cg-fill { height: 100%; border-radius: 2px; transition: width 0.8s; }
+.city-advisory { padding: 20px; border-radius: var(--radius-sm); border-left: 3px solid; margin-bottom: 14px; }
+.city-advisory h4 { font-size: 0.82rem; margin-bottom: 6px; }
+.city-advisory p { font-size: 0.75rem; color: var(--text-sec); margin-bottom: 8px; }
+.adv-actions { display: flex; flex-wrap: wrap; gap: 5px; }
+.adv-action { padding: 4px 10px; border-radius: 6px; font-size: 0.6rem; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+.compare-section { padding: 20px; }
+.compare-section h4 { font-size: 0.82rem; margin-bottom: 12px; color: var(--text-sec); }
+.compare-bar-wrap { margin-bottom: 10px; }
+.compare-label { display: flex; justify-content: space-between; font-size: 0.68rem; margin-bottom: 3px; }
+.compare-bar { height: 5px; background: rgba(74,222,128,0.06); border-radius: 3px; overflow: hidden; }
+.compare-fill { height: 100%; border-radius: 3px; transition: width 1s; }
+
+/* ============================================================
+   STATS
+   ============================================================ */
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 40px; }
+.stat-card { padding: 22px; }
+.stat-card .sc-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1rem; margin-bottom: 12px; }
+.stat-card .sc-label { font-size: 0.58rem; color: var(--text-sec); text-transform: uppercase; letter-spacing: 2px; }
+.stat-card .sc-val { font-size: 1.8rem; font-weight: 900; margin: 3px 0; }
+.stat-card .sc-sub { font-size: 0.66rem; color: var(--text-sec); }
+.trend { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 6px; font-size: 0.58rem; font-weight: 600; }
+.trend.good { background: rgba(74,222,128,0.08); color: #4ade80; }
+.trend.warn { background: rgba(251,191,36,0.08); color: #fbbf24; }
+.trend.bad { background: rgba(248,113,113,0.08); color: #f87171; }
+
+/* ============================================================
+   AQI
+   ============================================================ */
+.aqi-section { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 40px; }
+.aqi-display { padding: 30px; text-align: center; }
+.aqi-ring {
+  width: 180px; height: 180px; margin: 0 auto 20px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(12,22,14,0.9) 55%, transparent 56%), conic-gradient(var(--green), var(--yellow), var(--orange), var(--red), var(--pink));
+  display: flex; align-items: center; justify-content: center;
+  transition: box-shadow 0.5s;
+}
+.aqi-inner { text-align: center; }
+.aqi-num { font-size: 2.8rem; font-weight: 900; line-height: 1; }
+.aqi-label { font-size: 0.48rem; color: var(--text-sec); text-transform: uppercase; letter-spacing: 3px; margin-top: 3px; }
+.aqi-status { font-size: 1rem; font-weight: 700; margin: 8px 0 3px; }
+.aqi-desc { font-size: 0.72rem; color: var(--text-sec); max-width: 300px; margin: 0 auto 12px; }
+.aqi-badge { display: inline-flex; align-items: center; gap: 5px; padding: 6px 14px; border-radius: 20px; border: 1px solid; font-size: 0.66rem; font-weight: 600; }
+.scale-wrap { margin-top: 18px; }
+.scale-bar { height: 7px; border-radius: 4px; position: relative; background: linear-gradient(90deg, #4CAF50, #8BC34A, #FFC107, #FF9800, #F44336, #880E4F); }
+.scale-marker { position: absolute; top: -6px; width: 19px; height: 19px; border-radius: 50%; background: #fff; border: 3px solid var(--bg-primary); box-shadow: 0 2px 8px rgba(0,0,0,0.4); transform: translateX(-50%); transition: left 0.8s; }
+.scale-labels { display: flex; justify-content: space-between; font-size: 0.48rem; color: var(--text-sec); margin-top: 8px; }
+.chart-card { padding: 24px; }
+.chart-card h3 { font-size: 0.9rem; margin-bottom: 3px; }
+.chart-card .chart-sub { font-size: 0.66rem; color: var(--text-sec); margin-bottom: 14px; }
+.time-btns { display: flex; gap: 3px; margin-bottom: 14px; }
+.time-btns button { padding: 5px 12px; border-radius: 7px; border: 1px solid var(--border); background: transparent; color: var(--text-sec); font-size: 0.6rem; cursor: pointer; transition: var(--transition); font-weight: 600; font-family: inherit; }
+.time-btns button.active, .time-btns button:hover { background: var(--green-dim); color: var(--green); border-color: rgba(74,222,128,0.15); }
+
+/* ============================================================
+   TDS
+   ============================================================ */
+.tds-section { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 40px; }
+.tds-visual { padding: 30px; text-align: center; }
+.water-container { width: 130px; height: 175px; margin: 0 auto 14px; border: 2px solid rgba(96,165,250,0.15); border-radius: 12px; position: relative; overflow: hidden; background: rgba(96,165,250,0.02); }
+.water-wave { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(180deg, rgba(96,165,250,0.1), rgba(96,165,250,0.22)); border-radius: 0 0 10px 10px; transition: height 1s; }
+.tds-meter { font-size: 2rem; font-weight: 900; color: var(--blue); }
+.tds-quality { display: inline-flex; align-items: center; gap: 5px; padding: 5px 14px; border-radius: 18px; background: rgba(96,165,250,0.06); border: 1px solid rgba(96,165,250,0.1); font-size: 0.7rem; font-weight: 600; margin-top: 8px; }
+.tds-segments { display: flex; gap: 3px; justify-content: center; margin-top: 12px; }
+.tds-seg { width: 28px; height: 5px; border-radius: 3px; background: rgba(255,255,255,0.04); transition: var(--transition); }
+.tds-seg.on { background: var(--blue); box-shadow: 0 0 6px rgba(96,165,250,0.25); }
+.gas-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.gas-card { padding: 14px; display: flex; flex-direction: column; gap: 5px; }
+.gas-name { font-size: 0.55rem; color: var(--text-sec); text-transform: uppercase; letter-spacing: 1.5px; }
+.gas-val { font-size: 1.15rem; font-weight: 700; }
+.gas-bar { height: 3px; background: rgba(74,222,128,0.06); border-radius: 2px; overflow: hidden; }
+.gas-fill { height: 100%; border-radius: 2px; transition: width 0.8s; }
+
+/* ============================================================
+   GREEN ENERGY
+   ============================================================ */
+.green-energy-section { margin-bottom: 40px; }
+.sdg-banner { padding: 26px; background: rgba(12,22,14,0.6); border: 1px solid rgba(74,222,128,0.08); border-radius: var(--radius); margin-bottom: 18px; text-align: center; backdrop-filter: blur(16px); }
+.sdg-banner h3 { font-size: 1.05rem; font-weight: 700; background: linear-gradient(135deg, var(--green), var(--emerald)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+.sdg-banner p { color: var(--text-sec); font-size: 0.75rem; max-width: 680px; margin: 0 auto; }
+.sdg-goals { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
+.sdg-goal { padding: 5px 12px; border-radius: 7px; font-size: 0.6rem; font-weight: 600; display: flex; align-items: center; gap: 5px; border: 1px solid rgba(255,255,255,0.04); transition: var(--transition); }
+.sdg-goal:hover { transform: translateY(-1px); }
+.green-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 14px; margin-bottom: 18px; }
+.green-card { padding: 24px; }
+.green-card .gc-icon { width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin-bottom: 14px; }
+.green-card h4 { font-size: 0.9rem; margin-bottom: 5px; }
+.green-card p { font-size: 0.7rem; color: var(--text-sec); margin-bottom: 12px; }
+.green-card .gc-metric { display: flex; align-items: baseline; gap: 5px; margin-bottom: 8px; }
+.green-card .gc-val { font-size: 1.6rem; font-weight: 900; }
+.green-card .gc-unit { font-size: 0.65rem; color: var(--text-sec); }
+.green-card .gc-bar { height: 5px; background: rgba(74,222,128,0.06); border-radius: 3px; overflow: hidden; }
+.green-card .gc-fill { height: 100%; border-radius: 3px; transition: width 1s; }
+.green-card .gc-info { font-size: 0.62rem; color: var(--text-sec); margin-top: 6px; }
+
+/* Sustainability Score */
+.sustainability-score { padding: 28px; text-align: center; margin-bottom: 18px; }
+.sus-ring { width: 160px; height: 160px; margin: 0 auto 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; }
+.sus-ring svg { position: absolute; width: 100%; height: 100%; transform: rotate(-90deg); }
+.sus-ring circle { fill: none; stroke-width: 6; cx: 80; cy: 80; r: 72; }
+.sus-ring .bg-c { stroke: rgba(74,222,128,0.05); }
+.sus-ring .fg-c { stroke-linecap: round; transition: stroke-dashoffset 1.5s; }
+.sus-score { font-size: 2.4rem; font-weight: 900; position: relative; z-index: 1; }
+.sus-label { font-size: 0.5rem; color: var(--text-sec); text-transform: uppercase; letter-spacing: 2px; position: relative; z-index: 1; }
+.sus-breakdown { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 8px; margin-top: 14px; }
+.sus-item { padding: 12px; background: rgba(15,28,18,0.4); border: 1px solid var(--border); border-radius: 8px; }
+.sus-item-val { font-size: 1.1rem; font-weight: 700; }
+.sus-item-label { font-size: 0.48rem; color: var(--text-sec); text-transform: uppercase; letter-spacing: 1.5px; }
+
+/* Carbon Calc */
+.carbon-calc { padding: 28px; margin-bottom: 18px; }
+.carbon-calc h3 { font-size: 1.05rem; margin-bottom: 5px; }
+.carbon-calc .cc-sub { font-size: 0.7rem; color: var(--text-sec); margin-bottom: 20px; }
+.cc-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.cc-input-group { display: flex; flex-direction: column; gap: 5px; }
+.cc-input-group label { font-size: 0.62rem; color: var(--text-sec); text-transform: uppercase; letter-spacing: 1.5px; display: flex; align-items: center; gap: 5px; }
+.cc-input-group input, .cc-input-group select { padding: 10px 14px; border-radius: 8px; background: rgba(15,28,18,0.5); border: 1px solid var(--border); color: var(--text); font-size: 0.82rem; outline: none; transition: var(--transition); font-family: inherit; }
+.cc-input-group input:focus, .cc-input-group select:focus { border-color: rgba(74,222,128,0.25); }
+.cc-input-group select option { background: #0c1a10; color: var(--text); }
+.cc-btn { padding: 12px 28px; border-radius: 10px; background: linear-gradient(135deg, var(--green), var(--emerald)); color: #000; font-weight: 700; font-size: 0.82rem; border: none; cursor: pointer; transition: var(--transition); display: flex; align-items: center; gap: 7px; margin: 0 auto; font-family: inherit; }
+.cc-btn:hover { transform: scale(1.05); box-shadow: 0 4px 20px rgba(74,222,128,0.3); }
+.cc-result { display: none; margin-top: 18px; padding: 20px; background: rgba(15,28,18,0.4); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+.cc-result.show { display: block; }
+.cc-result-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-bottom: 16px; }
+.cc-result-item { text-align: center; }
+.cc-result-item .ccr-val { font-size: 1.4rem; font-weight: 800; }
+.cc-result-item .ccr-label { font-size: 0.55rem; color: var(--text-sec); text-transform: uppercase; letter-spacing: 1.5px; }
+.cc-tips { display: flex; flex-direction: column; gap: 8px; }
+.cc-tip { display: flex; align-items: flex-start; gap: 10px; padding: 10px; background: rgba(74,222,128,0.02); border-radius: 8px; border-left: 3px solid var(--green); }
+.cc-tip-num { width: 22px; height: 22px; border-radius: 6px; background: var(--green-dim); color: var(--green); display: flex; align-items: center; justify-content: center; font-size: 0.6rem; font-weight: 700; flex-shrink: 0; }
+.cc-tip p { font-size: 0.7rem; color: var(--text-sec); line-height: 1.5; }
+.cc-tip strong { color: var(--text); }
+
+/* Green Tips */
+.green-tips-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 14px; margin-bottom: 18px; }
+.green-tip-card { padding: 22px; border-left: 3px solid var(--green); }
+.green-tip-card .gt-category { font-size: 0.55rem; color: var(--green); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; font-weight: 700; }
+.green-tip-card h4 { font-size: 0.88rem; margin-bottom: 5px; }
+.green-tip-card p { font-size: 0.7rem; color: var(--text-sec); margin-bottom: 10px; line-height: 1.5; }
+.green-tip-card .gt-impact { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 6px; background: var(--green-dim); color: var(--green); font-size: 0.6rem; font-weight: 600; }
+
+/* ============================================================
+   ADVISORY
+   ============================================================ */
+.adv-section { margin-bottom: 40px; }
+.adv-tag { display: inline-flex; align-items: center; gap: 5px; padding: 5px 14px; border-radius: 18px; font-size: 0.6rem; font-weight: 700; letter-spacing: 1.5px; margin-bottom: 14px; }
+.adv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; margin-bottom: 18px; }
+.adv-card { padding: 18px; text-align: center; }
+.adv-icon-wrap { width: 42px; height: 42px; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 1rem; margin: 0 auto 10px; }
+.adv-card h4 { font-size: 0.82rem; margin-bottom: 3px; }
+.adv-card p { font-size: 0.66rem; color: var(--text-sec); margin-bottom: 7px; }
+.adv-level { padding: 3px 10px; border-radius: 6px; font-size: 0.55rem; font-weight: 700; }
+.adv-detail-card { padding: 22px; margin-bottom: 12px; }
+.adv-detail-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.adv-detail-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; flex-shrink: 0; }
+.adv-detail-head h3 { font-size: 0.88rem; }
+.adv-detail-head span { font-size: 0.66rem; color: var(--text-sec); }
+.step-list { display: flex; flex-direction: column; gap: 7px; }
+.step-item { display: flex; align-items: flex-start; gap: 8px; }
+.step-num { width: 26px; height: 26px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; font-weight: 700; flex-shrink: 0; }
+.step-item h5 { font-size: 0.75rem; font-weight: 600; }
+.step-item p { font-size: 0.62rem; color: var(--text-sec); }
+.emerg-banner { padding: 16px 22px; border-radius: var(--radius-sm); border-left: 4px solid; margin-bottom: 18px; display: flex; align-items: center; gap: 12px; }
+.emerg-banner.hidden { display: none; }
+.banner-icon { font-size: 1.2rem; }
+.banner-title { font-size: 0.88rem; font-weight: 700; }
+.banner-msg { font-size: 0.7rem; color: var(--text-sec); }
+.health-section { padding: 24px; margin-bottom: 40px; }
+.health-section h3 { font-size: 0.95rem; margin-bottom: 14px; }
+#healthTips { display: flex; flex-direction: column; gap: 8px; }
+.safety-section { padding: 24px; margin-bottom: 40px; }
+.safety-section h3 { font-size: 0.95rem; margin-bottom: 5px; }
+.safety-section .ss-sub { font-size: 0.7rem; color: var(--text-sec); margin-bottom: 14px; }
+.ai-suggestion-item { padding: 14px 18px; margin-bottom: 8px; background: rgba(15,28,18,0.4); border: 1px solid var(--border); border-left: 3px solid var(--green); border-radius: 8px; font-size: 0.75rem; line-height: 1.6; color: var(--text-sec); display: flex; align-items: flex-start; gap: 10px; }
+.ai-suggestion-item strong { color: var(--text); }
+.ai-suggestion-item-number { width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; font-weight: 700; flex-shrink: 0; }
+
+/* Predictions */
+.pred-section { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 40px; }
+.pred-card { padding: 22px; text-align: center; }
+.pred-card .pc-icon { font-size: 1.4rem; margin-bottom: 8px; }
+.pred-card .pc-label { font-size: 0.6rem; color: var(--text-sec); text-transform: uppercase; letter-spacing: 1.5px; }
+.pred-card .pc-val { font-size: 1.6rem; font-weight: 900; margin: 4px 0; }
+
+/* Devices */
+.device-section { margin-bottom: 40px; }
+.device-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(195px, 1fr)); gap: 10px; }
+.device-card { padding: 18px; }
+.dc-head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.dc-dot { width: 7px; height: 7px; border-radius: 50%; }
+.dc-name { font-size: 0.75rem; font-weight: 600; }
+.dc-status { font-size: 0.6rem; font-weight: 600; }
+.dc-metrics { display: flex; flex-direction: column; gap: 5px; }
+.dc-m { display: flex; justify-content: space-between; font-size: 0.66rem; }
+.dc-m span:first-child { color: var(--text-sec); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  padding: 40px 0 20px;
+  border-top: 1px solid var(--border);
+  background: rgba(6,10,7,0.8);
+  backdrop-filter: blur(10px);
+  position: relative; z-index: 1;
+}
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 28px; margin-bottom: 28px; }
+.footer-brand h3 { font-size: 1rem; background: linear-gradient(135deg, var(--green), var(--emerald)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+.footer-brand p { font-size: 0.7rem; color: var(--text-sec); line-height: 1.5; }
+.footer-col h4 { font-size: 0.66rem; color: var(--green); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1.5px; }
+.footer-col a { display: block; font-size: 0.7rem; color: var(--text-sec); text-decoration: none; padding: 3px 0; transition: var(--transition); }
+.footer-col a:hover { color: var(--green); transform: translateX(3px); }
+.footer-bottom { text-align: center; font-size: 0.62rem; color: var(--text-sec); padding-top: 20px; border-top: 1px solid var(--border); opacity: 0.6; }
+
+/* Back to top & Toast */
+.btt { position: fixed; bottom: 22px; right: 22px; z-index: 999; width: 42px; height: 42px; border-radius: 12px; background: linear-gradient(135deg, var(--green), var(--emerald)); color: #000; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; font-size: 0.95rem; opacity: 0; visibility: hidden; transform: translateY(20px); transition: var(--transition); box-shadow: 0 4px 20px rgba(74,222,128,0.25); }
+.btt.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+.btt:hover { transform: translateY(-3px) scale(1.05); }
+.toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(100px); padding: 12px 24px; border-radius: 12px; background: rgba(10,18,12,0.92); border: 1px solid rgba(74,222,128,0.12); color: var(--text); font-size: 0.75rem; z-index: 9999; transition: transform 0.4s; box-shadow: var(--shadow); backdrop-filter: blur(16px); font-weight: 500; }
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* Reveal */
+.reveal { opacity: 0; transform: translateY(25px); transition: opacity 0.6s, transform 0.6s; }
+.reveal.active { opacity: 1; transform: translateY(0); }
+
+/* Responsive */
+@media (max-width: 900px) {
+  nav { display: none; }
+  .hamburger { display: flex; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .aqi-section, .tds-section { grid-template-columns: 1fr; }
+  .pred-section { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .green-grid { grid-template-columns: 1fr; }
+  .cc-inputs { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .stats-grid { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 1.6rem; }
+  .hero-stats { gap: 8px; }
+  .hero-stat { padding: 14px 16px; min-width: 100px; }
+  .hero-stat .counter { font-size: 1.4rem; }
+  .adv-grid { grid-template-columns: 1fr 1fr; }
+  .footer-grid { grid-template-columns: 1fr; }
+  header { padding: 10px 14px; }
+  .container { padding: 0 12px; }
+  .hero-actions { flex-direction: column; align-items: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- Loader -->
+<div id="loader">
+  <div class="loader-wrap">
+    <div class="loader-ring"></div>
+    <div class="loader-emoji">🌿</div>
+  </div>
+  <div class="loader-text">EcoNerve</div>
+  <div class="loader-sub">Green Energy for Sustainable Development</div>
+</div>
+
+<!-- Forest Background (Real Image) -->
+<div class="forest-bg"></div>
+<div id="atmo"></div>
+
+<!-- Overlay for mobile menu -->
+<div class="overlay" id="overlay"></div>
+
+<!-- Header -->
+<header id="header">
+  <div class="logo">
+    <div class="logo-icon"><i class="fas fa-leaf"></i></div>
+    <h1>EcoNerve<small>Environmental Intelligence</small></h1>
+  </div>
+  <nav>
+    <a href="#dashboard" class="active">Home</a>
+    <a href="#green-energy">Features</a>
+    <a href="#air-quality">Search</a>
+    <a href="#advisory">Dashboard</a>
+    <a href="#advisory">Advisory</a>
+  </nav>
+  <div class="header-right">
+    <button class="hero-btn primary" style="padding:7px 18px;font-size:0.7rem;border-radius:8px" onclick="document.getElementById('cityInput').focus()"><i class="fas fa-bolt"></i> Get Started</button>
+    <div class="live-badge"><div class="live-dot"></div> LIVE</div>
+    <span class="update-timer"><span id="lastUp">0s ago</span></span>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mm">
+  <a href="#dashboard"><i class="fas fa-home"></i> Home</a>
+  <a href="#green-energy"><i class="fas fa-solar-panel"></i> Features</a>
+  <a href="#air-quality"><i class="fas fa-search"></i> Search</a>
+  <a href="#advisory"><i class="fas fa-chart-line"></i> Dashboard</a>
+  <a href="#advisory"><i class="fas fa-shield-halved"></i> Advisory</a>
+</div>
+
+<main>
+<div class="container">
+
+<!-- HERO — matching reference design -->
+<section class="hero reveal" id="dashboard">
+  <div class="hero-badge"><div class="hb-dot"></div> Live Environmental Monitoring Active</div>
+  <h1>AI-Powered<br><span class="gradient">Sustainability</span> Intelligence</h1>
+  <p>EcoNerve combines ESP32 IoT sensors, Firebase, and Machine Learning to monitor AQI, TDS, and gas levels across Indian cities.</p>
+
+  <div class="hero-actions">
+    <button class="hero-btn primary" onclick="document.getElementById('cityInput').focus()"><i class="fas fa-search"></i> Search Your City</button>
+    <button class="hero-btn secondary" onclick="document.getElementById('air-quality').scrollIntoView({behavior:'smooth'})"><i class="fas fa-chart-line"></i> Live Dashboard</button>
+  </div>
+
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="counter" id="hc1" data-target="100">0</div><span>Indian Cities</span></div>
+    <div class="hero-stat"><div class="counter" id="hc2" data-target="99">0</div><span>ML Accuracy</span></div>
+    <div class="hero-stat"><div class="counter" id="hc3" data-target="24">0</div><span>24/7 Monitoring</span></div>
+    <div class="hero-stat"><div class="counter" id="hc4" data-target="6">0</div><span>Active Sensors</span></div>
+  </div>
+
+  <div class="search-wrap">
+    <div class="search-box">
+      <i class="fas fa-search"></i>
+      <input type="text" id="cityInput" placeholder="Search any Indian city..." autocomplete="off">
+      <button onclick="searchCity()"><i class="fas fa-leaf"></i> Analyze</button>
+    </div>
+    <div class="autocomplete" id="autocomplete"></div>
+  </div>
+</section>
+
+<!-- City Result -->
+<div class="city-result" id="cityResult">
+  <div class="city-header glass"><div class="city-icon" id="cityIcon"><i class="fas fa-city"></i></div><div><div class="city-name" id="cityNameDisplay"></div><div class="city-state" id="cityStateDisplay"></div></div><div class="city-time"><i class="fas fa-clock"></i> <span id="cityTime"></span></div></div>
+  <div id="cityStats" class="city-stats"></div>
+  <div id="cityGasGrid" class="city-gas-grid"></div>
+  <div class="city-advisory glass-sm" id="cityAdvisory"></div>
+  <div class="compare-section glass"><h4><i class="fas fa-chart-bar" style="margin-right:5px;color:var(--green)"></i> National Average Comparison</h4><div id="compareContent"></div></div>
+</div>
+
+<!-- STATS -->
+<section class="reveal" id="air-quality">
+  <div class="section-head"><div class="badge"><i class="fas fa-chart-bar"></i> LIVE STATS</div><h2>Environmental <span class="hl">Overview</span></h2><p>Real-time monitoring powering sustainable decisions</p></div>
+  <div class="stats-grid">
+    <div class="stat-card glass"><div class="sc-icon" style="background:rgba(74,222,128,0.06);color:#4ade80"><i class="fas fa-wind"></i></div><div class="sc-label">Air Quality</div><div class="sc-val" id="sv_aqi">--</div><div class="sc-sub"><span class="trend good" id="sv_aqi_trend"><i class="fas fa-arrow-down"></i> Good</span></div></div>
+    <div class="stat-card glass"><div class="sc-icon" style="background:rgba(96,165,250,0.06);color:#60a5fa"><i class="fas fa-droplet"></i></div><div class="sc-label">Water TDS</div><div class="sc-val" style="color:#60a5fa"><span id="sv_tds">--</span> <small style="font-size:.65rem;color:var(--text-sec)">ppm</small></div><div class="sc-sub" style="font-size:.66rem;color:var(--text-sec)">Total Dissolved Solids</div></div>
+    <div class="stat-card glass"><div class="sc-icon" style="background:rgba(251,191,36,0.06);color:#fbbf24"><i class="fas fa-temperature-half"></i></div><div class="sc-label">Temperature</div><div class="sc-val" style="color:#FFD54F"><span id="sv_temp">--</span><small style="font-size:.85rem">°C</small></div><div class="sc-sub" style="font-size:.66rem;color:var(--text-sec)">Ambient</div></div>
+    <div class="stat-card glass"><div class="sc-icon" style="background:rgba(206,147,216,0.06);color:#CE93D8"><i class="fas fa-droplet"></i></div><div class="sc-label">Humidity</div><div class="sc-val" style="color:#CE93D8"><span id="sv_hum">--</span><small style="font-size:.85rem">%</small></div><div class="sc-sub" style="font-size:.66rem;color:var(--text-sec)">Relative</div></div>
+  </div>
+</section>
+
+<!-- GREEN ENERGY -->
+<section class="green-energy-section reveal" id="green-energy">
+  <div class="section-head"><div class="badge"><i class="fas fa-solar-panel"></i> GREEN ENERGY</div><h2>Sustainable <span class="hl">Development</span> Tracker</h2><p>Monitoring India's progress towards clean energy</p></div>
+  <div class="sdg-banner">
+    <h3><i class="fas fa-globe-americas"></i> UN Sustainable Development Goals</h3>
+    <p>EcoNerve directly contributes to multiple UN SDGs through environmental monitoring and green energy promotion.</p>
+    <div class="sdg-goals">
+      <span class="sdg-goal" style="background:rgba(229,36,59,0.08);color:#e5243b"><i class="fas fa-heartbeat"></i> SDG 3</span>
+      <span class="sdg-goal" style="background:rgba(38,189,226,0.08);color:#26bde2"><i class="fas fa-droplet"></i> SDG 6</span>
+      <span class="sdg-goal" style="background:rgba(253,196,0,0.08);color:#fcc30b"><i class="fas fa-bolt"></i> SDG 7</span>
+      <span class="sdg-goal" style="background:rgba(221,19,103,0.08);color:#dd1367"><i class="fas fa-industry"></i> SDG 9</span>
+      <span class="sdg-goal" style="background:rgba(253,157,36,0.08);color:#fd9d24"><i class="fas fa-city"></i> SDG 11</span>
+      <span class="sdg-goal" style="background:rgba(63,126,68,0.08);color:#3f7e44"><i class="fas fa-leaf"></i> SDG 13</span>
+      <span class="sdg-goal" style="background:rgba(86,192,43,0.08);color:#56c02b"><i class="fas fa-tree"></i> SDG 15</span>
+    </div>
+  </div>
+  <div class="green-grid">
+    <div class="green-card glass"><div class="gc-icon" style="background:rgba(251,191,36,0.06);color:#fbbf24"><i class="fas fa-solar-panel"></i></div><h4>Solar Energy Potential</h4><p>Estimated solar power generation based on weather</p><div class="gc-metric"><span class="gc-val" style="color:#fbbf24" id="solarPotential">4.8</span><span class="gc-unit">kWh/m²/day</span></div><div class="gc-bar"><div class="gc-fill" id="solarBar" style="width:65%;background:linear-gradient(90deg,#fbbf24,#fb923c)"></div></div><div class="gc-info" id="solarInfo">☀️ Good solar irradiance</div></div>
+    <div class="green-card glass"><div class="gc-icon" style="background:rgba(96,165,250,0.06);color:#60a5fa"><i class="fas fa-wind"></i></div><h4>Wind Energy Feasibility</h4><p>Wind power potential for the region</p><div class="gc-metric"><span class="gc-val" style="color:#60a5fa" id="windPotential">3.2</span><span class="gc-unit">m/s avg</span></div><div class="gc-bar"><div class="gc-fill" id="windBar" style="width:45%;background:linear-gradient(90deg,#60a5fa,#818cf8)"></div></div><div class="gc-info" id="windInfo">💨 Moderate wind</div></div>
+    <div class="green-card glass"><div class="gc-icon" style="background:rgba(74,222,128,0.06);color:#4ade80"><i class="fas fa-tree"></i></div><h4>Carbon Sink Estimate</h4><p>Trees needed to offset pollution</p><div class="gc-metric"><span class="gc-val" style="color:#4ade80" id="treesNeeded">2,450</span><span class="gc-unit">trees</span></div><div class="gc-bar"><div class="gc-fill" id="treeBar" style="width:55%;background:linear-gradient(90deg,#4ade80,#22c55e)"></div></div><div class="gc-info" id="treeInfo">🌳 Each tree = 22kg CO₂/yr</div></div>
+    <div class="green-card glass"><div class="gc-icon" style="background:rgba(192,132,252,0.06);color:#c084fc"><i class="fas fa-recycle"></i></div><h4>Waste-to-Energy</h4><p>Energy from waste management</p><div class="gc-metric"><span class="gc-val" style="color:#c084fc" id="wastePotential">1.8</span><span class="gc-unit">MW</span></div><div class="gc-bar"><div class="gc-fill" id="wasteBar" style="width:40%;background:linear-gradient(90deg,#c084fc,#a855f7)"></div></div><div class="gc-info" id="wasteInfo">♻️ Powers ~3,600 homes</div></div>
+  </div>
+
+  <div class="sustainability-score glass reveal">
+    <h3 style="margin-bottom:3px;color:var(--green)">🌍 City Sustainability Score</h3>
+    <p style="font-size:.7rem;color:var(--text-sec);margin-bottom:18px">Air + Water + Energy + Carbon composite</p>
+    <div class="sus-ring"><svg viewBox="0 0 160 160"><circle class="bg-c" cx="80" cy="80" r="72"/><circle class="fg-c" id="susCircle" cx="80" cy="80" r="72" stroke="#4ade80" stroke-dasharray="452" stroke-dashoffset="180"/></svg><div><div class="sus-score" id="susScore" style="color:#4ade80">62</div><div class="sus-label">/ 100</div></div></div>
+    <div class="sus-breakdown">
+      <div class="sus-item"><div class="sus-item-val" style="color:#4ade80" id="susAir">65</div><div class="sus-item-label">Air</div></div>
+      <div class="sus-item"><div class="sus-item-val" style="color:#60a5fa" id="susWater">70</div><div class="sus-item-label">Water</div></div>
+      <div class="sus-item"><div class="sus-item-val" style="color:#fbbf24" id="susEnergy">55</div><div class="sus-item-label">Energy</div></div>
+      <div class="sus-item"><div class="sus-item-val" style="color:#c084fc" id="susCarbon">58</div><div class="sus-item-label">Carbon</div></div>
+    </div>
+  </div>
+
+  <div class="carbon-calc glass reveal">
+    <h3><i class="fas fa-calculator" style="color:var(--green);margin-right:7px"></i>Carbon Footprint Calculator</h3>
+    <p class="cc-sub">Estimate your carbon footprint & get green recommendations</p>
+    <div class="cc-inputs">
+      <div class="cc-input-group"><label><i class="fas fa-car" style="color:#fb923c"></i> Driving (km/mo)</label><input type="number" id="ccDriving" value="500" min="0"></div>
+      <div class="cc-input-group"><label><i class="fas fa-bolt" style="color:#fbbf24"></i> Electricity (kWh/mo)</label><input type="number" id="ccElectricity" value="300" min="0"></div>
+      <div class="cc-input-group"><label><i class="fas fa-fire" style="color:#f87171"></i> Cooking Fuel</label><select id="ccFuel"><option value="lpg">LPG Gas</option><option value="electric">Electric</option><option value="wood">Wood/Biomass</option><option value="solar">Solar Cooker</option></select></div>
+      <div class="cc-input-group"><label><i class="fas fa-plane" style="color:#60a5fa"></i> Flights/year</label><input type="number" id="ccFlights" value="2" min="0"></div>
+      <div class="cc-input-group"><label><i class="fas fa-utensils" style="color:#4ade80"></i> Diet</label><select id="ccDiet"><option value="mixed">Non-veg</option><option value="veg">Vegetarian</option><option value="vegan">Vegan</option></select></div>
+      <div class="cc-input-group"><label><i class="fas fa-recycle" style="color:#c084fc"></i> Waste</label><select id="ccWaste"><option value="no">No Segregation</option><option value="partial">Partial</option><option value="full">Full</option></select></div>
+    </div>
+    <button class="cc-btn" onclick="calculateCarbon()"><i class="fas fa-leaf"></i> Calculate Footprint</button>
+    <div class="cc-result" id="ccResult"><h4 style="margin-bottom:12px;color:var(--green)"><i class="fas fa-chart-pie"></i> Analysis</h4><div class="cc-result-grid" id="ccResultGrid"></div><h4 style="margin:14px 0 8px;font-size:.82rem"><i class="fas fa-lightbulb" style="color:#fbbf24"></i> Green Recommendations</h4><div class="cc-tips" id="ccTips"></div></div>
+  </div>
+
+  <div class="section-head reveal" style="margin-top:18px"><div class="badge"><i class="fas fa-seedling"></i> GREEN LIVING</div><h2>Sustainable <span class="hl">Action Plan</span></h2></div>
+  <div class="green-tips-grid reveal">
+    <div class="green-tip-card glass"><div class="gt-category">🔆 SOLAR</div><h4>Rooftop Solar Panels</h4><p>3kW system saves ₹2-3K/month. 40% govt subsidy available.</p><span class="gt-impact"><i class="fas fa-arrow-down"></i> -4.2t CO₂/yr</span></div>
+    <div class="green-tip-card glass"><div class="gt-category">🚲 TRANSPORT</div><h4>Switch to EV</h4><p>Zero emissions. 2 trips/week on transit saves 1.5t CO₂/year.</p><span class="gt-impact"><i class="fas fa-arrow-down"></i> -1.5-3t CO₂/yr</span></div>
+    <div class="green-tip-card glass"><div class="gt-category">💧 WATER</div><h4>Rainwater Harvesting</h4><p>Collect 50K+ liters annually. Reduces groundwater dependency.</p><span class="gt-impact"><i class="fas fa-arrow-down"></i> 50KL water/yr</span></div>
+    <div class="green-tip-card glass"><div class="gt-category">🌳 CARBON</div><h4>Plant Native Trees</h4><p>Neem, Peepal, Banyan — max carbon absorption. Join local drives.</p><span class="gt-impact"><i class="fas fa-arrow-down"></i> 22kg CO₂/tree/yr</span></div>
+    <div class="green-tip-card glass"><div class="gt-category">♻️ WASTE</div><h4>Composting</h4><p>Reduces methane (25x worse than CO₂). Enables 80% recycling.</p><span class="gt-impact"><i class="fas fa-arrow-down"></i> -0.5t CO₂/yr</span></div>
+    <div class="green-tip-card glass"><div class="gt-category">⚡ ENERGY</div><h4>Smart Home</h4><p>LED + BEE 5-star appliances + smart meters save big.</p><span class="gt-impact"><i class="fas fa-arrow-down"></i> ₹3-5K/yr saved</span></div>
+  </div>
+</section>
+
+<!-- AQI -->
+<section class="reveal">
+  <div class="section-head"><div class="badge"><i class="fas fa-lungs"></i> AIR QUALITY</div><h2>Air Quality <span class="hl">Analysis</span></h2></div>
+  <div class="aqi-section">
+    <div class="aqi-display glass">
+      <div class="aqi-ring" id="aqiRing"><div class="aqi-inner"><div class="aqi-num" id="aqiNum">--</div><div class="aqi-label">AQI Index</div></div></div>
+      <div class="aqi-status" id="aqiSt">--</div><div class="aqi-desc" id="aqiDsc">Loading...</div>
+      <div class="aqi-badge" id="aqiBdg"><span id="aqiBdgT">--</span></div>
+      <div class="scale-wrap"><div class="scale-bar"><div class="scale-marker" id="scaleM"></div></div><div class="scale-labels"><span>Good</span><span>OK</span><span>Mid</span><span>Poor</span><span>V.Poor</span><span>Hazard</span></div></div>
+    </div>
+    <div class="chart-card glass">
+      <h3>AQI Trend</h3><div class="chart-sub">Real-time monitoring</div>
+      <div class="time-btns"><button class="active">1H</button><button>6H</button><button>24H</button><button>7D</button></div>
+      <svg viewBox="0 0 730 165" style="width:100%">
+        <defs><linearGradient id="cg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4ade80" stop-opacity="0.12"/><stop offset="100%" stop-color="#4ade80" stop-opacity="0"/></linearGradient></defs>
+        <line x1="50" y1="16" x2="680" y2="16" stroke="rgba(74,222,128,0.03)"/><line x1="50" y1="49" x2="680" y2="49" stroke="rgba(74,222,128,0.03)"/><line x1="50" y1="82" x2="680" y2="82" stroke="rgba(74,222,128,0.03)"/><line x1="50" y1="115" x2="680" y2="115" stroke="rgba(74,222,128,0.03)"/><line x1="50" y1="148" x2="680" y2="148" stroke="rgba(74,222,128,0.03)"/>
+        <text x="10" y="20" fill="rgba(165,214,167,0.3)" font-size="8">500</text><text x="10" y="53" fill="rgba(165,214,167,0.3)" font-size="8">375</text><text x="10" y="86" fill="rgba(165,214,167,0.3)" font-size="8">250</text><text x="10" y="119" fill="rgba(165,214,167,0.3)" font-size="8">125</text><text x="10" y="152" fill="rgba(165,214,167,0.3)" font-size="8">0</text>
+        <path id="chartA" fill="url(#cg)"/><path id="chartL" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"/><circle id="chartD" r="5" fill="#4ade80" stroke="rgba(74,222,128,0.3)" stroke-width="8"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- TDS -->
+<section class="reveal" id="water">
+  <div class="section-head"><div class="badge"><i class="fas fa-flask-vial"></i> WATER & GASES</div><h2>Water & Gas <span class="hl">Monitoring</span></h2></div>
+  <div class="tds-section">
+    <div class="tds-visual glass">
+      <h3 style="font-size:.88rem;margin-bottom:14px">Water TDS</h3>
+      <div class="water-container"><div class="water-wave" id="wWave"></div></div>
+      <div class="tds-meter" id="tdsM">--<small>ppm</small></div>
+      <div class="tds-quality" id="tdsQ"><i class="fas fa-check-circle"></i> --</div>
+      <div class="tds-segments"><div class="tds-seg"></div><div class="tds-seg"></div><div class="tds-seg"></div><div class="tds-seg"></div><div class="tds-seg"></div></div>
+    </div>
+    <div class="glass" style="padding:20px">
+      <h3 style="font-size:.88rem;margin-bottom:14px"><i class="fas fa-smog" style="color:var(--text-sec);margin-right:5px"></i>Gases</h3>
+      <div class="gas-grid">
+        <div class="gas-card glass-sm"><div class="gas-name">CO₂</div><div class="gas-val" id="g_co2">--</div><div class="gas-bar"><div class="gas-fill" id="gb_co2"></div></div></div>
+        <div class="gas-card glass-sm"><div class="gas-name">CO</div><div class="gas-val" id="g_co">--</div><div class="gas-bar"><div class="gas-fill" id="gb_co"></div></div></div>
+        <div class="gas-card glass-sm"><div class="gas-name">NO₂</div><div class="gas-val" id="g_no2">--</div><div class="gas-bar"><div class="gas-fill" id="gb_no2"></div></div></div>
+        <div class="gas-card glass-sm"><div class="gas-name">SO₂</div><div class="gas-val" id="g_so2">--</div><div class="gas-bar"><div class="gas-fill" id="gb_so2"></div></div></div>
+        <div class="gas-card glass-sm"><div class="gas-name">O₃</div><div class="gas-val" id="g_o3">--</div><div class="gas-bar"><div class="gas-fill" id="gb_o3"></div></div></div>
+        <div class="gas-card glass-sm"><div class="gas-name">PM2.5</div><div class="gas-val" id="g_pm25">--</div><div class="gas-bar"><div class="gas-fill" id="gb_pm25"></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ADVISORY -->
+<section class="adv-section reveal" id="advisory">
+  <div class="section-head"><div class="badge"><i class="fas fa-shield-halved"></i> ADVISORY</div><h2>Health & <span class="hl">Safety</span></h2></div>
+  <div class="emerg-banner glass-sm hidden" id="emergBanner"><div class="banner-icon" id="bannerIco">⚠️</div><div><div class="banner-title" id="bannerT"></div><div class="banner-msg" id="bannerM"></div></div></div>
+  <span class="adv-tag" id="advTag"></span>
+  <div class="adv-grid" id="advGrid"></div>
+  <div id="advDet"></div>
+</section>
+
+<div class="health-section glass reveal"><h3><i class="fas fa-heart-pulse" style="color:#f87171;margin-right:7px"></i>Health Tips</h3><div id="healthTips"></div></div>
+<div class="safety-section glass reveal"><h3><i class="fas fa-clipboard-list" style="color:var(--green);margin-right:7px"></i>Safety Guidelines</h3><p class="ss-sub">Based on current conditions</p><div id="aiSuggestions"></div></div>
+
+<!-- PREDICTIONS -->
+<section class="reveal">
+  <div class="section-head"><div class="badge"><i class="fas fa-brain"></i> FORECAST</div><h2>Environmental <span class="hl">Forecast</span></h2></div>
+  <div class="pred-section">
+    <div class="pred-card glass"><div class="pc-icon">🌬️</div><div class="pc-label">AQI (6h)</div><div class="pc-val" id="predA">--</div></div>
+    <div class="pred-card glass"><div class="pc-icon">💧</div><div class="pc-label">TDS</div><div class="pc-val" style="color:#60a5fa" id="predT">--</div></div>
+    <div class="pred-card glass"><div class="pc-icon">🛡️</div><div class="pc-label">Risk</div><div class="pc-val" id="predG">--</div></div>
+  </div>
+</section>
+
+<!-- DEVICES -->
+<section class="device-section reveal">
+  <div class="section-head"><div class="badge"><i class="fas fa-microchip"></i> IOT</div><h2>Sensor <span class="hl">Network</span></h2></div>
+  <div class="device-grid">
+    <div class="device-card glass"><div class="dc-head"><div class="dc-dot" style="background:var(--green)"></div><div class="dc-name">Air Sensor</div><div class="dc-status" style="color:var(--green)">Online</div></div><div class="dc-metrics"><div class="dc-m"><span>Type</span><span>MQ-135/PMS5003</span></div><div class="dc-m"><span>Power</span><span>Solar</span></div><div class="dc-m"><span>Rate</span><span id="ds_r">2.1 KB/s</span></div></div></div>
+    <div class="device-card glass"><div class="dc-head"><div class="dc-dot" style="background:var(--green)"></div><div class="dc-name">TDS Sensor</div><div class="dc-status" style="color:var(--green)">Online</div></div><div class="dc-metrics"><div class="dc-m"><span>Type</span><span>TDS Meter v2</span></div><div class="dc-m"><span>Power</span><span>Solar</span></div><div class="dc-m"><span>Accuracy</span><span>±2%</span></div></div></div>
+    <div class="device-card glass"><div class="dc-head"><div class="dc-dot" style="background:var(--green)"></div><div class="dc-name">ESP32 Gateway</div><div class="dc-status" style="color:var(--green)">Online</div></div><div class="dc-metrics"><div class="dc-m"><span>WiFi</span><span id="ds_w">-42 dBm</span></div><div class="dc-m"><span>Memory</span><span id="ds_m">68%</span></div><div class="dc-m"><span>Protocol</span><span>MQTT</span></div></div></div>
+    <div class="device-card glass"><div class="dc-head"><div class="dc-dot" style="background:#fbbf24"></div><div class="dc-name">Solar Monitor</div><div class="dc-status" style="color:#fbbf24">Active</div></div><div class="dc-metrics"><div class="dc-m"><span>Gen</span><span id="ds_solar">2.4 kWh</span></div><div class="dc-m"><span>Eff</span><span id="ds_eff">18.5%</span></div><div class="dc-m"><span>Battery</span><span id="ds_bat">92%</span></div></div></div>
+  </div>
+</section>
+
+</div></main>
+
+<footer><div class="container">
+  <div class="footer-grid">
+    <div class="footer-brand"><h3>🌿 EcoNerve</h3><p>Green Energy for Sustainable Development — IoT-powered environmental monitoring for a cleaner India.</p><p style="margin-top:6px;font-size:0.58rem;color:var(--green);opacity:0.6">🎯 Aligned with UN SDGs 3, 6, 7, 9, 11, 13, 15</p></div>
+    <div class="footer-col"><h4>Features</h4><a href="#">Air Quality</a><a href="#">Water TDS</a><a href="#">Green Energy</a><a href="#">Carbon Calc</a></div>
+    <div class="footer-col"><h4>Sustainability</h4><a href="#">Solar Energy</a><a href="#">Wind Energy</a><a href="#">Rainwater</a><a href="#">Composting</a></div>
+    <div class="footer-col"><h4>Technology</h4><a href="#">ESP32 IoT</a><a href="#">Firebase</a><a href="#">ML Models</a><a href="#">OpenWeather</a></div>
+  </div>
+  <div class="footer-bottom">© 2025 EcoNerve — Built with 🌿 for a greener India</div>
+</div></footer>
+
+<button class="btt" id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-arrow-up"></i></button>
+<div class="toast" id="toast"></div>
+
+<script>
+const INDIA_CITIES=[{name:"Delhi",state:"Delhi NCR",aqi:285,tds:520,temp:34,hum:45,co2:680,co:5.2,no2:62,so2:28,o3:48,pm25:78},{name:"Mumbai",state:"Maharashtra",aqi:142,tds:380,temp:30,hum:78,co2:520,co:3.1,no2:38,so2:15,o3:35,pm25:42},{name:"Pune",state:"Maharashtra",aqi:105,tds:320,temp:28,hum:65,co2:460,co:2.4,no2:28,so2:12,o3:30,pm25:32},{name:"Bengaluru",state:"Karnataka",aqi:88,tds:290,temp:26,hum:68,co2:430,co:2.0,no2:25,so2:10,o3:32,pm25:26},{name:"Chennai",state:"Tamil Nadu",aqi:115,tds:420,temp:32,hum:80,co2:480,co:2.6,no2:34,so2:16,o3:38,pm25:35},{name:"Hyderabad",state:"Telangana",aqi:108,tds:340,temp:31,hum:62,co2:470,co:2.5,no2:30,so2:13,o3:34,pm25:33},{name:"Kolkata",state:"West Bengal",aqi:168,tds:450,temp:32,hum:82,co2:550,co:3.5,no2:42,so2:20,o3:40,pm25:52},{name:"Ahmedabad",state:"Gujarat",aqi:155,tds:480,temp:35,hum:40,co2:530,co:3.2,no2:40,so2:18,o3:42,pm25:48},{name:"Jaipur",state:"Rajasthan",aqi:175,tds:550,temp:36,hum:30,co2:560,co:3.8,no2:45,so2:22,o3:44,pm25:55},{name:"Lucknow",state:"Uttar Pradesh",aqi:225,tds:480,temp:33,hum:55,co2:620,co:4.5,no2:55,so2:25,o3:48,pm25:68},{name:"Kanpur",state:"Uttar Pradesh",aqi:255,tds:560,temp:34,hum:50,co2:650,co:4.8,no2:58,so2:28,o3:50,pm25:72},{name:"Varanasi",state:"Uttar Pradesh",aqi:210,tds:500,temp:33,hum:58,co2:600,co:4.2,no2:52,so2:24,o3:45,pm25:65},{name:"Chandigarh",state:"Punjab",aqi:95,tds:300,temp:30,hum:55,co2:440,co:2.1,no2:24,so2:10,o3:28,pm25:28},{name:"Patna",state:"Bihar",aqi:245,tds:480,temp:33,hum:65,co2:640,co:4.7,no2:56,so2:26,o3:48,pm25:72},{name:"Bhopal",state:"Madhya Pradesh",aqi:128,tds:360,temp:31,hum:55,co2:495,co:2.7,no2:32,so2:14,o3:34,pm25:38},{name:"Indore",state:"Madhya Pradesh",aqi:108,tds:330,temp:30,hum:52,co2:465,co:2.4,no2:28,so2:12,o3:30,pm25:32},{name:"Kochi",state:"Kerala",aqi:48,tds:200,temp:28,hum:82,co2:385,co:1.0,no2:12,so2:4,o3:22,pm25:12},{name:"Thiruvananthapuram",state:"Kerala",aqi:42,tds:190,temp:29,hum:84,co2:380,co:0.9,no2:10,so2:3,o3:20,pm25:10},{name:"Guwahati",state:"Assam",aqi:92,tds:280,temp:27,hum:75,co2:435,co:2.0,no2:22,so2:9,o3:28,pm25:26},{name:"Dehradun",state:"Uttarakhand",aqi:72,tds:240,temp:25,hum:65,co2:415,co:1.5,no2:18,so2:7,o3:25,pm25:20},{name:"Shimla",state:"Himachal Pradesh",aqi:32,tds:140,temp:18,hum:72,co2:365,co:0.6,no2:7,so2:2,o3:16,pm25:7},{name:"Manali",state:"Himachal Pradesh",aqi:25,tds:120,temp:15,hum:68,co2:355,co:0.5,no2:5,so2:1,o3:14,pm25:5},{name:"Srinagar",state:"Jammu & Kashmir",aqi:45,tds:180,temp:16,hum:65,co2:380,co:0.9,no2:10,so2:4,o3:20,pm25:11},{name:"Leh",state:"Ladakh",aqi:18,tds:90,temp:8,hum:30,co2:340,co:0.3,no2:3,so2:1,o3:10,pm25:3},{name:"Goa",state:"Goa",aqi:38,tds:200,temp:29,hum:80,co2:375,co:0.8,no2:9,so2:3,o3:19,pm25:9},{name:"Gurgaon",state:"Haryana",aqi:262,tds:500,temp:35,hum:42,co2:655,co:5.0,no2:62,so2:28,o3:48,pm25:76},{name:"Noida",state:"Uttar Pradesh",aqi:268,tds:490,temp:34,hum:46,co2:660,co:4.9,no2:59,so2:27,o3:47,pm25:74},{name:"Ooty",state:"Tamil Nadu",aqi:20,tds:100,temp:15,hum:75,co2:345,co:0.3,no2:4,so2:1,o3:12,pm25:4},{name:"Munnar",state:"Kerala",aqi:18,tds:95,temp:18,hum:80,co2:342,co:0.3,no2:3,so2:1,o3:10,pm25:3},{name:"Darjeeling",state:"West Bengal",aqi:28,tds:130,temp:14,hum:78,co2:355,co:0.5,no2:6,so2:2,o3:15,pm25:6},{name:"Nainital",state:"Uttarakhand",aqi:30,tds:140,temp:16,hum:72,co2:360,co:0.6,no2:7,so2:2,o3:16,pm25:6},{name:"Nagpur",state:"Maharashtra",aqi:125,tds:350,temp:33,hum:55,co2:490,co:2.8,no2:32,so2:14,o3:33,pm25:38},{name:"Nashik",state:"Maharashtra",aqi:85,tds:280,temp:27,hum:60,co2:420,co:1.8,no2:22,so2:8,o3:28,pm25:24},{name:"Surat",state:"Gujarat",aqi:130,tds:400,temp:33,hum:65,co2:500,co:2.9,no2:35,so2:16,o3:36,pm25:40},{name:"Coimbatore",state:"Tamil Nadu",aqi:68,tds:260,temp:28,hum:72,co2:410,co:1.5,no2:18,so2:7,o3:26,pm25:18},{name:"Mysuru",state:"Karnataka",aqi:52,tds:220,temp:25,hum:70,co2:395,co:1.2,no2:15,so2:5,o3:25,pm25:15},{name:"Visakhapatnam",state:"Andhra Pradesh",aqi:82,tds:290,temp:30,hum:78,co2:425,co:1.8,no2:22,so2:9,o3:28,pm25:22},{name:"Vijayawada",state:"Andhra Pradesh",aqi:95,tds:320,temp:30,hum:45,co2:280,co:5.2,no2:62,so2:28,o3:48,pm25:78},{name:"Agra",state:"Uttar Pradesh",aqi:235,tds:520,temp:35,hum:48,co2:630,co:4.6,no2:56,so2:26,o3:48,pm25:70},{name:"Ranchi",state:"Jharkhand",aqi:135,tds:380,temp:28,hum:62,co2:505,co:2.8,no2:34,so2:15,o3:35,pm25:40},{name:"Raipur",state:"Chhattisgarh",aqi:148,tds:400,temp:32,hum:55,co2:520,co:3.0,no2:36,so2:16,o3:36,pm25:45},{name:"Bhubaneswar",state:"Odisha",aqi:98,tds:310,temp:30,hum:75,co2:445,co:2.2,no2:26,so2:11,o3:30,pm25:28},{name:"Port Blair",state:"Andaman",aqi:22,tds:110,temp:28,hum:85,co2:348,co:0.4,no2:4,so2:1,o3:12,pm25:4},{name:"Udaipur",state:"Rajasthan",aqi:82,tds:300,temp:32,hum:40,co2:418,co:1.8,no2:20,so2:8,o3:27,pm25:22},{name:"Jodhpur",state:"Rajasthan",aqi:195,tds:620,temp:38,hum:25,co2:580,co:4.0,no2:48,so2:24,o3:46,pm25:60},{name:"Rishikesh",state:"Uttarakhand",aqi:40,tds:170,temp:24,hum:68,co2:378,co:0.8,no2:10,so2:3,o3:20,pm25:10},{name:"Amritsar",state:"Punjab",aqi:145,tds:400,temp:31,hum:54,co2:515,co:3.0,no2:36,so2:16,o3:36,pm25:44},{name:"Ludhiana",state:"Punjab",aqi:165,tds:420,temp:32,hum:52,co2:540,co:3.4,no2:40,so2:18,o3:38,pm25:50},{name:"Shillong",state:"Meghalaya",aqi:35,tds:150,temp:20,hum:80,co2:370,co:0.7,no2:8,so2:2,o3:18,pm25:8},{name:"Gangtok",state:"Sikkim",aqi:30,tds:140,temp:18,hum:78,co2:362,co:0.6,no2:7,so2:2,o3:16,pm25:6},{name:"Mangaluru",state:"Karnataka",aqi:55,tds:230,temp:28,hum:80,co2:398,co:1.1,no2:14,so2:5,o3:23,pm25:14},{name:"Thane",state:"Maharashtra",aqi:138,tds:375,temp:30,hum:76,co2:510,co:3.0,no2:36,so2:15,o3:35,pm25:42},{name:"Ghaziabad",state:"Uttar Pradesh",aqi:295,tds:510,temp:34,hum:44,co2:690,co:5.3,no2:64,so2:30,o3:50,pm25:80}];
+const NATIONAL_AVG={aqi:125,tds:350,co2:480,pm25:38};
+
+function getAQI(v){if(v<=50)return{lv:0,st:'Good',ds:'Excellent air quality.',cl:'#4CAF50',tx:'#4ade80',risk:'No Risk',em:'😊',actions:['Enjoy outdoors','Exercise','Open windows']};if(v<=100)return{lv:1,st:'Satisfactory',ds:'Acceptable for most.',cl:'#8BC34A',tx:'#a3e635',risk:'Low Risk',em:'🙂',actions:['Safe for most','Monitor if asthmatic','Hydrate']};if(v<=200)return{lv:2,st:'Moderate',ds:'Discomfort for sensitive people.',cl:'#FFC107',tx:'#fbbf24',risk:'Moderate',em:'😐',actions:['Limit outdoor','N95 mask','Air purifier']};if(v<=300)return{lv:3,st:'Poor',ds:'Unhealthy. Stay indoors.',cl:'#FF9800',tx:'#fb923c',risk:'High',em:'😷',actions:['Stay indoors','N95 must','Seal windows','HEPA ON']};if(v<=400)return{lv:4,st:'Very Poor',ds:'Avoid outdoor exposure.',cl:'#F44336',tx:'#f87171',risk:'Very High',em:'🚨',actions:['Lockdown','N99','Medical kit','Evacuate plan']};return{lv:5,st:'Hazardous',ds:'EMERGENCY! Evacuate.',cl:'#880E4F',tx:'#f472b6',risk:'Severe',em:'☠️',actions:['EVACUATE','Respirator','Hospital','Call 112']};}
+function getTDS(v){if(v<=300)return{st:'Excellent',cl:'#64B5F6',ic:'check-circle',sg:1};if(v<=500)return{st:'Good',cl:'#4ade80',ic:'check-circle',sg:2};if(v<=800)return{st:'Fair',cl:'#fbbf24',ic:'exclamation-triangle',sg:3};if(v<=1200)return{st:'Poor',cl:'#fb923c',ic:'exclamation-circle',sg:4};return{st:'Unsafe',cl:'#f87171',ic:'times-circle',sg:5};}
+function gasColor(v,th){return v<=th[0]?'#4ade80':v<=th[1]?'#fbbf24':v<=th[2]?'#fb923c':'#f87171'}
+
+const cityInput=document.getElementById('cityInput'),acBox=document.getElementById('autocomplete');let acIdx=-1;
+cityInput.addEventListener('input',function(){const q=this.value.trim().toLowerCase();acIdx=-1;if(q.length<1){acBox.classList.remove('show');return}const m=INDIA_CITIES.filter(c=>c.name.toLowerCase().includes(q)||c.state.toLowerCase().includes(q)).slice(0,8);if(!m.length){acBox.innerHTML='<div style="padding:12px 16px;color:var(--text-sec);font-size:12px">No cities found</div>';acBox.classList.add('show');return}acBox.innerHTML=m.map((c,i)=>{const a=getAQI(c.aqi);return`<div class="ac-item" onclick="selectCity('${c.name}')"><i class="fas fa-map-marker-alt"></i><span class="ac-city">${c.name}</span><span class="ac-state">${c.state}</span><span class="ac-aqi" style="background:${a.cl}18;color:${a.tx}">${c.aqi}</span></div>`}).join('');acBox.classList.add('show')});
+cityInput.addEventListener('keydown',function(e){const it=acBox.querySelectorAll('.ac-item');if(!it.length)return;if(e.key==='ArrowDown'){e.preventDefault();acIdx=Math.min(acIdx+1,it.length-1);it.forEach(i=>i.classList.remove('selected'));it[acIdx].classList.add('selected')}else if(e.key==='ArrowUp'){e.preventDefault();acIdx=Math.max(acIdx-1,0);it.forEach(i=>i.classList.remove('selected'));it[acIdx].classList.add('selected')}else if(e.key==='Enter'){e.preventDefault();if(acIdx>=0&&it[acIdx])it[acIdx].click();else searchCity()}else if(e.key==='Escape')acBox.classList.remove('show')});
+document.addEventListener('click',e=>{if(!e.target.closest('.search-wrap'))acBox.classList.remove('show')});
+function selectCity(n){cityInput.value=n;acBox.classList.remove('show');currentCity=n;searchCity()}
+function searchCity(){const q=cityInput.value.trim().toLowerCase();if(!q){showToast('⚠️ Enter a city');return}let city=INDIA_CITIES.find(c=>c.name.toLowerCase()===q);if(!city)city=INDIA_CITIES.find(c=>c.name.toLowerCase().includes(q));if(!city){showToast('❌ Not found');return}cityInput.value=city.name;currentCity=city.name;fetchRealData();displayCityResult(city)}
+
+
+function displayCityResult(city){const a=getAQI(city.aqi),t=getTDS(city.tds),res=document.getElementById('cityResult');res.classList.add('show');document.getElementById('cityNameDisplay').textContent=city.name;document.getElementById('cityStateDisplay').textContent=city.state+', India 🇮🇳';const ci=document.getElementById('cityIcon');ci.style.background=a.cl+'12';ci.style.color=a.tx;const now=new Date();document.getElementById('cityTime').textContent=now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
+document.getElementById('cityStats').innerHTML=`<div class="city-stat"><span class="cs-icon">🌬️</span><span class="cs-val" style="color:${a.tx}">${city.aqi}</span><span class="cs-label">AQI</span><span class="cs-status" style="background:${a.cl}12;color:${a.tx}">${a.em} ${a.st}</span></div><div class="city-stat"><span class="cs-icon">💧</span><span class="cs-val" style="color:${t.cl}">${city.tds}</span><span class="cs-label">TDS</span><span class="cs-status" style="background:${t.cl}12;color:${t.cl}">${t.st}</span></div><div class="city-stat"><span class="cs-icon">🌡️</span><span class="cs-val" style="color:#FFD54F">${city.temp}°C</span><span class="cs-label">Temp</span><span class="cs-status" style="background:rgba(255,213,79,0.06);color:#FFD54F">${city.temp>35?'Hot':city.temp>30?'Warm':'Normal'}</span></div><div class="city-stat"><span class="cs-icon">💦</span><span class="cs-val" style="color:#CE93D8">${city.hum}%</span><span class="cs-label">Humidity</span><span class="cs-status" style="background:rgba(206,147,216,0.06);color:#CE93D8">${city.hum>75?'High':city.hum>45?'Normal':'Low'}</span></div>`;
+const gases=[{n:'CO₂',v:city.co2,mx:1000,u:'ppm',th:[400,600,800]},{n:'CO',v:city.co,mx:10,u:'ppm',th:[2,5,8]},{n:'NO₂',v:city.no2,mx:100,u:'ppb',th:[20,50,80]},{n:'SO₂',v:city.so2,mx:80,u:'ppb',th:[10,30,60]},{n:'O₃',v:city.o3,mx:100,u:'ppb',th:[30,60,80]},{n:'PM2.5',v:city.pm25,mx:100,u:'µg/m³',th:[15,35,55]}];
+document.getElementById('cityGasGrid').innerHTML=gases.map(g=>{const c=gasColor(g.v,g.th),p=Math.min(g.v/g.mx*100,100);return`<div class="city-gas"><div class="cg-name">${g.n}</div><div class="cg-val" style="color:${c}">${typeof g.v==='number'&&g.v%1?g.v.toFixed(1):g.v}<span style="font-size:.5rem;color:var(--text-sec)"> ${g.u}</span></div><div class="cg-bar"><div class="cg-fill" style="width:${p}%;background:${c}"></div></div></div>`}).join('');
+const adv=document.getElementById('cityAdvisory');adv.style.borderColor=a.cl;adv.style.background=a.cl+'05';adv.innerHTML=`<h4 style="color:${a.tx}"><i class="fas fa-shield-halved"></i> ${a.risk}</h4><p>${a.ds}</p><div class="adv-actions">${a.actions.map(ac=>`<span class="adv-action" style="background:${a.cl}08;color:${a.tx}"><i class="fas fa-check-circle"></i>${ac}</span>`).join('')}</div>`;
+const cmp=[{l:'AQI',v:city.aqi,avg:125,mx:500},{l:'TDS',v:city.tds,avg:350,mx:1000},{l:'CO₂',v:city.co2,avg:480,mx:1000},{l:'PM2.5',v:city.pm25,avg:38,mx:100}];
+document.getElementById('compareContent').innerHTML=cmp.map(c=>{const cl=c.v>c.avg?'#f87171':'#4ade80',d=((c.v-c.avg)/c.avg*100).toFixed(0);return`<div class="compare-bar-wrap"><div class="compare-label"><span>${c.l}</span><span style="color:${cl}">${c.v} <span style="font-size:.48rem;opacity:.6">(${d>0?'+':''}${d}%)</span></span></div><div class="compare-bar"><div class="compare-fill" style="width:${Math.min(c.v/c.mx*100,100)}%;background:${cl}"></div></div></div>`}).join('');
+updateGreenEnergy(city);showToast(`✅ ${city.name} — AQI: ${city.aqi} (${a.st})`);res.scrollIntoView({behavior:'smooth',block:'nearest'})}
+
+function updateGreenEnergy(c){const s=Math.max(((c.temp>30?5.5:c.temp>25?4.8:c.temp>20?4:3.2)*(1-c.hum/200)),2).toFixed(1);document.getElementById('solarPotential').textContent=s;document.getElementById('solarBar').style.width=Math.min(s/7*100,100)+'%';document.getElementById('solarInfo').textContent=s>=4.5?'☀️ Excellent solar potential':s>=3.5?'☀️ Good for rooftop solar':'☁️ Moderate — try hybrid';
+const w=(c.hum>70?4.5:c.temp>35?2.5:3.2+Math.random()*1.5).toFixed(1);document.getElementById('windPotential').textContent=w;document.getElementById('windBar').style.width=Math.min(w/8*100,100)+'%';document.getElementById('windInfo').textContent=w>=4?'💨 Strong — great for turbines':w>=3?'💨 Moderate wind':'💨 Low — use solar';
+const tr=Math.round(c.aqi*10+c.co2*2);document.getElementById('treesNeeded').textContent=tr.toLocaleString();document.getElementById('treeBar').style.width=Math.min(tr/5000*100,100)+'%';document.getElementById('treeInfo').textContent=`🌳 ${tr.toLocaleString()} trees = ${(tr*22/1000).toFixed(1)}t CO₂/yr offset`;
+const wt=(c.aqi*0.01+Math.random()*0.5).toFixed(1);document.getElementById('wastePotential').textContent=wt;document.getElementById('wasteBar').style.width=Math.min(wt/5*100,100)+'%';document.getElementById('wasteInfo').textContent=`♻️ Powers ~${Math.round(wt*2000).toLocaleString()} homes`;
+const as=Math.max(0,Math.round(100-c.aqi/5)),ws=Math.max(0,Math.round(100-c.tds/12)),es=Math.round(s/7*100),cs=Math.max(0,Math.round(100-c.co2/10)),tot=Math.round((as+ws+es+cs)/4);
+document.getElementById('susScore').textContent=tot;document.getElementById('susAir').textContent=as;document.getElementById('susWater').textContent=ws;document.getElementById('susEnergy').textContent=es;document.getElementById('susCarbon').textContent=cs;
+const circ=2*Math.PI*72,off=circ-(tot/100)*circ;document.getElementById('susCircle').style.strokeDashoffset=off;
+const sc=tot>=70?'#4ade80':tot>=50?'#fbbf24':tot>=30?'#fb923c':'#f87171';document.getElementById('susScore').style.color=sc;document.getElementById('susCircle').setAttribute('stroke',sc)}
+
+function calculateCarbon(){const d=parseFloat(document.getElementById('ccDriving').value)||0,e=parseFloat(document.getElementById('ccElectricity').value)||0,fuel=document.getElementById('ccFuel').value,fl=parseFloat(document.getElementById('ccFlights').value)||0,diet=document.getElementById('ccDiet').value,waste=document.getElementById('ccWaste').value;
+const dC=d*0.21,eC=e*0.82,fC={lpg:45,electric:15,wood:80,solar:0}[fuel],flC=fl*255/12,diC={mixed:120,veg:70,vegan:50}[diet],wO={no:0,partial:-15,full:-35}[waste];
+const mo=Math.round(dC+eC+fC+flC+diC+wO),yr=mo*12,tr=Math.round(yr/22),avg=1900,cmp=((yr/avg)*100).toFixed(0),cl=yr>avg?'#f87171':yr>avg*.7?'#fbbf24':'#4ade80';
+document.getElementById('ccResultGrid').innerHTML=`<div class="cc-result-item"><div class="ccr-val" style="color:${cl}">${mo}</div><div class="ccr-label">kg CO₂/mo</div></div><div class="cc-result-item"><div class="ccr-val" style="color:${cl}">${(yr/1000).toFixed(1)}</div><div class="ccr-label">Tonnes/yr</div></div><div class="cc-result-item"><div class="ccr-val" style="color:#4ade80">${tr}</div><div class="ccr-label">Trees needed</div></div><div class="cc-result-item"><div class="ccr-val" style="color:${yr>avg?'#f87171':'#4ade80'}">${cmp}%</div><div class="ccr-label">vs India avg</div></div>`;
+const tips=[];if(dC>100)tips.push({t:'Switch to EV',d:`Driving = ${Math.round(dC)}kg/mo. EV cuts 70%.`});if(eC>200)tips.push({t:'Go Solar',d:`Electricity = ${Math.round(eC)}kg/mo. 3kW solar eliminates 80%.`});if(fuel==='wood')tips.push({t:'Replace Biomass',d:'Wood = 80kg CO₂/mo + PM2.5. Switch to LPG/solar.'});if(diet==='mixed')tips.push({t:'Meatless Mondays',d:'Cuts diet emissions 40%. Saves 600kg/yr.'});tips.push({t:'Plant Trees',d:`${tr} trees offset your annual footprint.`});
+document.getElementById('ccTips').innerHTML=tips.map((t,i)=>`<div class="cc-tip"><div class="cc-tip-num">${i+1}</div><p><strong>${t.t}:</strong> ${t.d}</p></div>`).join('');
+document.getElementById('ccResult').classList.add('show');showToast(`🌍 ${(yr/1000).toFixed(1)}t CO₂/yr — ${yr>avg?'Above':'Below'} avg`)}
+
+function getAdv(lv){const A=[[{i:'fa-person-running',t:'Exercise',d:'All safe.',c:'#4ade80',l:'Safe'},{i:'fa-window-maximize',t:'Open Windows',d:'Fresh air.',c:'#4ade80',l:'Open'},{i:'fa-face-smile',t:'No Mask',d:'Not needed.',c:'#4ade80',l:'None'},{i:'fa-baby',t:'All Ages OK',d:'No limits.',c:'#4ade80',l:'Safe'}],[{i:'fa-person-walking',t:'Mostly Safe',d:'Monitor sensitive.',c:'#a3e635',l:'Aware'},{i:'fa-mask-face',t:'Mask Optional',d:'Asthmatics carry.',c:'#a3e635',l:'Optional'},{i:'fa-lungs',t:'Inhaler',d:'Keep handy.',c:'#a3e635',l:'Aware'},{i:'fa-droplet',t:'Hydrate',d:'8+ glasses.',c:'#a3e635',l:'Important'}],[{i:'fa-person-walking-arrow-right',t:'Limit Out',d:'Max 2-3h.',c:'#fbbf24',l:'Reduce'},{i:'fa-mask-face',t:'N95',d:'Recommended.',c:'#fbbf24',l:'Needed'},{i:'fa-fan',t:'Purifier',d:'HEPA ON.',c:'#fbbf24',l:'ON'},{i:'fa-car-side',t:'Car Closed',d:'Windows shut.',c:'#fbbf24',l:'Closed'}],[{i:'fa-house-lock',t:'Stay In',d:'WFH.',c:'#fb923c',l:'Critical'},{i:'fa-head-side-mask',t:'N95 Must',d:'Required out.',c:'#fb923c',l:'Must'},{i:'fa-hospital',t:'Medical',d:'Know hospital.',c:'#fb923c',l:'Ready'},{i:'fa-shower',t:'Shower',d:'After exposure.',c:'#fb923c',l:'Essential'}],[{i:'fa-house-chimney-crack',t:'LOCKDOWN',d:'No outside.',c:'#f87171',l:'CRITICAL'},{i:'fa-kit-medical',t:'Med Kit',d:'O₂ ready.',c:'#f87171',l:'EMERGENCY'},{i:'fa-bed',t:'Rest',d:'Minimize.',c:'#f87171',l:'MANDATORY'},{i:'fa-right-from-bracket',t:'Evacuate',d:'Ready.',c:'#f87171',l:'PREPARED'}],[{i:'fa-circle-radiation',t:'EVACUATE',d:'Leave now.',c:'#f472b6',l:'NOW'},{i:'fa-mask-ventilator',t:'Respirator',d:'P100.',c:'#f472b6',l:'CRITICAL'},{i:'fa-hand-holding-medical',t:'Hospital',d:'If symptoms.',c:'#f472b6',l:'URGENT'},{i:'fa-heart-circle-exclamation',t:'Life Support',d:'O₂+CPR.',c:'#f472b6',l:'CRITICAL'}]];
+const P=[[{t:'Outdoor',s:'All clear',i:'fa-sun',c:'#4ade80',steps:['Exercise freely','Kids play','Events OK','Sports OK']},{t:'Home',s:'Optimize',i:'fa-house',c:'#64B5F6',steps:['Open windows','Indoor plants','Purifiers off','Air clothes']}],[{t:'Activity',s:'Careful',i:'fa-clipboard-check',c:'#a3e635',steps:['Light exercise','Watch symptoms','Avoid traffic','Drink water']},{t:'Home',s:'Improve',i:'fa-house',c:'#64B5F6',steps:['Windows away traffic','Wet mop','Kitchen exhaust','Monitor AQI']}],[{t:'Safety',s:'Precautions',i:'fa-shield-halved',c:'#fbbf24',steps:['Max 2-3h out','No gardening','N95 mask','Watch cough']},{t:'Indoor',s:'Safe zone',i:'fa-house-medical',c:'#fb923c',steps:['HEPA high','Close windows','No candles','Clean room']}],[{t:'Emergency',s:'Essential only',i:'fa-triangle-exclamation',c:'#fb923c',steps:['Emergency only','N95+glasses','<30min','Shower after']},{t:'Indoor',s:'Max protect',i:'fa-house-medical-flag',c:'#f87171',steps:['Tape edges','Purifiers 24/7','Box fan filter','SpO2 check']}],[{t:'SURVIVAL',s:'Life threat',i:'fa-skull-crossbones',c:'#f87171',steps:['Seal home','Wet cloth','SpO2 hourly','Evacuate 450+']},{t:'MEDICAL',s:'Critical',i:'fa-hospital',c:'#f472b6',steps:['Blue lips=911','Nebulizer','Elderly hospital','Document']}],[{t:'⚠️ EMERGENCY',s:'Survive',i:'fa-circle-exclamation',c:'#f472b6',steps:['EVACUATE','Inner room','Shallow breath','Call 911']},{t:'🏥 MEDICAL',s:'Critical',i:'fa-staff-snake',c:'#f87171',steps:['Unconscious=THREAT','Upright+O₂','Hospital NOW','Bring meds']}]];return{cards:A[Math.min(lv,5)],panels:P[Math.min(lv,5)]}}
+
+function renderAdv(lv,cat){const ad=getAdv(lv),g=document.getElementById('advGrid'),d=document.getElementById('advDet'),tag=document.getElementById('advTag');const tc=['rgba(74,222,128,0.06)','rgba(163,230,53,0.06)','rgba(251,191,36,0.06)','rgba(251,146,60,0.06)','rgba(248,113,113,0.06)','rgba(244,114,182,0.06)'],tt=['#4ade80','#a3e635','#fbbf24','#fb923c','#f87171','#f472b6'];tag.style.background=tc[lv];tag.style.color=tt[lv];tag.innerHTML=`<i class="fas fa-circle" style="font-size:.25rem;vertical-align:middle"></i> ${cat.risk.toUpperCase()}`;
+g.innerHTML=ad.cards.map(c=>`<div class="adv-card glass-sm"><div class="adv-icon-wrap" style="background:${c.c}08;color:${c.c}"><i class="fas ${c.i}"></i></div><h4>${c.t}</h4><p>${c.d}</p><span class="adv-level" style="background:${c.c}08;color:${c.c}">${c.l}</span></div>`).join('');
+d.innerHTML=ad.panels.map(p=>`<div class="adv-detail-card glass"><div class="adv-detail-head"><div class="adv-detail-icon" style="background:${p.c}08;color:${p.c}"><i class="fas ${p.i}"></i></div><div><h3 style="color:${p.c}">${p.t}</h3><span>${p.s}</span></div></div><div class="step-list">${p.steps.map((s,i)=>`<div class="step-item"><div class="step-num" style="background:${p.c}08;color:${p.c}">${i+1}</div><div><h5>${s}</h5></div></div>`).join('')}</div></div>`).join('');
+const ban=document.getElementById('emergBanner');if(lv>=3){ban.classList.remove('hidden');ban.style.borderColor=cat.cl;ban.style.background=cat.cl+'05';document.getElementById('bannerIco').style.color=cat.tx;document.getElementById('bannerT').textContent=lv>=4?'🚨 EMERGENCY!':'⚠️ Alert';document.getElementById('bannerT').style.color=cat.tx;document.getElementById('bannerM').textContent=cat.ds}else ban.classList.add('hidden')}
+
+function renderHealth(lv){const tips=[[{i:'fa-person-running',c:'#4ade80',t:'Exercise',d:'Perfect outdoors.'},{i:'fa-glass-water',c:'#64B5F6',t:'Hydrate',d:'Drink water.'},{i:'fa-seedling',c:'#a3e635',t:'Go Green',d:'Plant a tree.'},{i:'fa-face-laugh-beam',c:'#fbbf24',t:'Enjoy',d:'Parks & nature.'}],[{i:'fa-person-walking',c:'#a3e635',t:'Moderate',d:'Light exercise.'},{i:'fa-eye',c:'#fbbf24',t:'Watch',d:'Any irritation.'},{i:'fa-lungs',c:'#CE93D8',t:'Breathe',d:'Lung exercises.'},{i:'fa-glass-water',c:'#64B5F6',t:'Hydrate+',d:'Flush toxins.'}],[{i:'fa-mask-face',c:'#fbbf24',t:'Mask',d:'N95.'},{i:'fa-fan',c:'#64B5F6',t:'Purifier',d:'HEPA.'},{i:'fa-pills',c:'#fb923c',t:'Meds',d:'Inhaler ready.'},{i:'fa-window-minimize',c:'#f87171',t:'Indoor',d:'Close windows.'}],[{i:'fa-house-lock',c:'#fb923c',t:'Indoor',d:'WFH.'},{i:'fa-head-side-mask',c:'#f87171',t:'N95',d:'Must.'},{i:'fa-hospital',c:'#f472b6',t:'Alert',d:'Watch breathing.'},{i:'fa-shower',c:'#CE93D8',t:'Shower',d:'After outside.'}],[{i:'fa-triangle-exclamation',c:'#f87171',t:'DANGER',d:'Stay in.'},{i:'fa-kit-medical',c:'#f472b6',t:'Kit',d:'O₂+meds.'},{i:'fa-phone-volume',c:'#fb923c',t:'Help',d:'Emergency.'},{i:'fa-bed',c:'#CE93D8',t:'Rest',d:'Minimize.'}],[{i:'fa-skull-crossbones',c:'#f472b6',t:'EVACUATE',d:'Leave.'},{i:'fa-truck-medical',c:'#f87171',t:'Hospital',d:'Go now.'},{i:'fa-mask-ventilator',c:'#fb923c',t:'Respirator',d:'Full.'},{i:'fa-heart-circle-exclamation',c:'#f87171',t:'Threat',d:'CPR.'}]];
+document.getElementById('healthTips').innerHTML=tips[Math.min(lv,5)].map(t=>`<div class="step-item"><div class="step-num" style="background:${t.c}08;color:${t.c};border-radius:7px;width:30px;height:30px"><i class="fas ${t.i}" style="font-size:.7rem"></i></div><div><h5>${t.t}</h5><p>${t.d}</p></div></div>`).join('')}
+
+const SAFETY_RULES=[[{title:"Outdoor",rule:"All safe. Enjoy nature."},{title:"Ventilation",rule:"Open windows freely."},{title:"Water",rule:"8-10 glasses daily."},{title:"Green Tip",rule:"Perfect for solar panel maintenance. Install rooftop solar!"}],[{title:"Activity",rule:"Generally safe. Monitor if sensitive."},{title:"Air",rule:"Windows open low-traffic hours."},{title:"Green Tip",rule:"Moderate air = time to switch to clean energy. Induction reduces indoor pollution 60%."},{title:"Action",rule:"Start composting kitchen waste today."}],[{title:"Outdoor",rule:"Limit to 2-3h. Wear N95."},{title:"Indoor",rule:"HEPA purifiers. Close windows peak hours."},{title:"Green Tip",rule:"Poor air = fossil fuel dependency. Advocate rooftop solar. 1kW = 1.5t CO₂/yr offset."},{title:"Action",rule:"Switch to EV/transit. Check FAME-II subsidies."}],[{title:"Stay In",rule:"Avoid non-essential outdoor travel."},{title:"Medical",rule:"Keep inhalers, pulse oximeter."},{title:"Green Energy",rule:"Pollution demands systemic change. Support clean energy. Install solar-powered purifiers."},{title:"Community",rule:"Report polluters via CPCB app. Push for EV stations."}],[{title:"LOCKDOWN",rule:"NO outside unless emergency."},{title:"Emergency",rule:"SpO2 every 2h. N99 if moving."},{title:"Green Crisis",rule:"This emergency = fossil fuel dependency. Demand renewable transition."},{title:"Long-term",rule:"Pledge: solar, EV, reduced footprint. Every action compounds."}],[{title:"⚠️ EVACUATE",rule:"LIFE-THREATENING. Leave immediately."},{title:"🏥 Medical",rule:"SpO2 <92% = hospital NOW."},{title:"Root Cause",rule:"Decades of fossil fuel. Must transition to 100% renewable."},{title:"Prevention",rule:"Solar mandates, EV by 2030, zero-waste, urban forests."}]];
+function renderSafetyRules(lv){const r=SAFETY_RULES[Math.min(lv,5)],colors=['#4ade80','#a3e635','#fbbf24','#fb923c','#f87171','#f472b6'],c=colors[Math.min(lv,5)];document.getElementById('aiSuggestions').innerHTML=r.map((r,i)=>`<div class="ai-suggestion-item" style="border-left-color:${c}"><span class="ai-suggestion-item-number" style="background:${c}12;color:${c}">${i+1}</span><strong>${r.title}:</strong> ${r.rule}</div>`).join('')}
+
+function updateAll(aqi,tds,temp,hum,co2,co,no2,so2,o3,pm25){const a=getAQI(aqi),t=getTDS(tds);document.getElementById('sv_aqi').textContent=aqi;document.getElementById('sv_aqi').style.color=a.tx;document.getElementById('sv_tds').textContent=tds;document.getElementById('sv_temp').textContent=temp.toFixed(1);document.getElementById('sv_hum').textContent=hum;
+const tr=document.getElementById('sv_aqi_trend');tr.className='trend '+(a.lv<=1?'good':a.lv<=2?'warn':'bad');tr.innerHTML=`<i class="fas fa-${a.lv<=1?'arrow-down':'arrow-up'}"></i> ${a.st}`;
+document.getElementById('aqiNum').textContent=aqi;document.getElementById('aqiNum').style.color=a.tx;document.getElementById('aqiRing').style.boxShadow=`0 0 25px ${a.cl}15,inset 0 0 15px ${a.cl}08`;document.getElementById('aqiSt').textContent=a.st;document.getElementById('aqiSt').style.color=a.tx;document.getElementById('aqiDsc').textContent=a.ds;
+const bg=document.getElementById('aqiBdg');bg.style.background=a.cl+'0d';bg.style.color=a.tx;bg.style.borderColor=a.cl+'1a';document.getElementById('aqiBdgT').textContent=a.st+' '+a.em;document.getElementById('scaleM').style.left=Math.min(aqi/500*100,100)+'%';
+document.getElementById('tdsM').innerHTML=tds+'<small>ppm</small>';document.getElementById('tdsQ').innerHTML=`<i class="fas fa-${t.ic}"></i> ${t.st}`;document.getElementById('tdsQ').style.color=t.cl;document.querySelectorAll('.tds-seg').forEach((s,i)=>s.classList.toggle('on',i<t.sg));document.getElementById('wWave').style.height=Math.min(tds/1200*100,90)+'%';
+const sg=(id,v,mx)=>{document.getElementById('g_'+id).textContent=typeof v==='number'&&v%1?v.toFixed(1):v;document.getElementById('gb_'+id).style.width=Math.min(v/mx*100,100)+'%'};sg('co2',co2,1000);sg('co',co,10);sg('no2',no2,100);sg('so2',so2,100);sg('o3',o3,100);sg('pm25',pm25,100);
+const gc=(id,v,th)=>{const b=document.getElementById('gb_'+id);b.style.background=v<=th[0]?'linear-gradient(90deg,#4CAF50,#81C784)':v<=th[1]?'linear-gradient(90deg,#8BC34A,#CDDC39)':v<=th[2]?'linear-gradient(90deg,#FFC107,#FF9800)':'linear-gradient(90deg,#FF5722,#F44336)'};gc('co2',co2,[400,600,800]);gc('co',co,[2,5,8]);gc('pm25',pm25,[15,35,55]);gc('no2',no2,[20,50,80]);gc('so2',so2,[10,30,60]);gc('o3',o3,[30,60,80]);
+const pa=Math.round(aqi*(1+Math.random()*.12-.04)),pt=Math.round(tds*(1+Math.random()*.08-.02)),pac=getAQI(pa);document.getElementById('predA').textContent=pa;document.getElementById('predA').style.color=pac.tx;document.getElementById('predT').textContent=pt+' ppm';
+const gr=a.lv<=1?'Low Risk':a.lv<=2?'Moderate':'High Risk',grc=a.lv<=1?'#4ade80':a.lv<=2?'#fbbf24':'#f87171';document.getElementById('predG').innerHTML=`<i class="fas fa-shield-halved"></i> ${gr}`;document.getElementById('predG').style.color=grc;
+renderAdv(a.lv,a);renderHealth(a.lv);updateChart(aqi,a.cl);renderSafetyRules(a.lv);const city=INDIA_CITIES.find(c=>c.name===currentCity);if(city)updateGreenEnergy(city)}
+
+let cPts=[140,133,136,126,130,120,125,118,114,110];
+function updateChart(aqi,cl){const y=148-(aqi/500*132);cPts.shift();cPts.push(y);const xs=[50,120,190,260,330,400,470,540,610,680];let lp='M',ap='M';cPts.forEach((v,i)=>{const c=i?'L':'';lp+=`${c}${xs[i]},${v} `;ap+=`${c}${xs[i]},${v} `});ap+='L680,148 L50,148 Z';document.getElementById('chartL').setAttribute('d',lp);document.getElementById('chartA').setAttribute('d',ap);document.getElementById('chartL').setAttribute('stroke',cl);const d=document.getElementById('chartD');d.setAttribute('cx',xs[9]);d.setAttribute('cy',cPts[9]);d.style.fill=cl;d.setAttribute('stroke',cl+'40')}
+
+let currentCity='Delhi',cachedDataPopupShown=false,lastT=Date.now();
+const API_KEY='72eff7d298e92a6f69ec9a0ba07b966a';
+
+async function fetchRealData(){try{const wr=await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${currentCity}&appid=${API_KEY}&units=metric`);if(!wr.ok)throw 0;const wd=await wr.json();const{lat,lon}=wd.coord;const ar=await fetch(`https://api.openweathermap.org/data/2.5/air_quality?lat=${lat}&lon=${lon}&appid=${API_KEY}`);if(!ar.ok)throw 0;const ad=await ar.json(),c=ad.components||{};const temp=wd.main.temp||25,hum=wd.main.humidity||50,co2=Math.round((c.co||400)/4.88),co=c.co?(c.co/1000).toFixed(1):1.5,no2=Math.round(c.no2||20),so2=Math.round(c.so2||10),o3=Math.round(c.o3||30),pm25=Math.round(c.pm2_5||25);let aqi;if(pm25<=12)aqi=(pm25/12)*50;else if(pm25<=35.4)aqi=((pm25-12)/23.4)*50+50;else if(pm25<=55.4)aqi=((pm25-35.4)/20)*50+100;else if(pm25<=150.4)aqi=((pm25-55.4)/95)*50+150;else if(pm25<=250.4)aqi=((pm25-150.4)/100)*50+200;else aqi=((pm25-250.4)/500.4)*50+250;aqi=Math.round(Math.min(Math.max(aqi,0),500));const tds=Math.round(200+(temp*5)+(Math.random()*100));updateAll(aqi,tds,temp,hum,co2,co,no2,so2,o3,pm25);lastT=Date.now();cachedDataPopupShown=false}catch(e){const cc=INDIA_CITIES.find(c=>c.name.toLowerCase()===currentCity.toLowerCase());if(cc){updateAll(cc.aqi,cc.tds,cc.temp,cc.hum,cc.co2,cc.co,cc.no2,cc.so2,cc.o3,cc.pm25);lastT=Date.now();if(!cachedDataPopupShown){showToast('⚠️ Cached: '+currentCity);cachedDataPopupShown=true}}}}
+
+function createAtmo(){const c=document.getElementById('atmo');for(let i=0;i<30;i++){const f=document.createElement('div');f.className='firefly';f.style.cssText=`left:${Math.random()*100}%;top:${20+Math.random()*70}%;--dx:${Math.random()*70-35}px;--dy:${-50-Math.random()*180}px;animation-duration:${5+Math.random()*12}s;animation-delay:${Math.random()*15}s;width:${2+Math.random()*3}px;height:${2+Math.random()*3}px`;c.appendChild(f)}const lv=['🍃','🌿','🍂','☘️','🌱'];for(let i=0;i<8;i++){const l=document.createElement('div');l.className='leaf-p';l.textContent=lv[Math.floor(Math.random()*lv.length)];l.style.cssText=`left:${Math.random()*100}%;font-size:${8+Math.random()*10}px;animation-duration:${18+Math.random()*18}s;animation-delay:${Math.random()*16}s`;c.appendChild(l)}}
+
+function animC(el,t,s=''){let c=0;const inc=t/60;const ti=setInterval(()=>{c+=inc;if(c>=t){el.textContent=Math.floor(t).toLocaleString()+s;clearInterval(ti)}else el.textContent=Math.floor(c).toLocaleString()+s},25)}
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),4000)}
+
+setInterval(()=>document.getElementById('lastUp').textContent=Math.round((Date.now()-lastT)/1000)+'s ago',1000);
+window.addEventListener('scroll',()=>{document.getElementById('header').classList.toggle('scrolled',scrollY>50);document.getElementById('btt').classList.toggle('visible',scrollY>500)});
+const ham=document.getElementById('hamburger'),mm=document.getElementById('mm'),ov=document.getElementById('overlay');
+ham.addEventListener('click',()=>{ham.classList.toggle('active');mm.classList.toggle('active');ov.classList.toggle('active')});
+ov.addEventListener('click',()=>{ham.classList.remove('active');mm.classList.remove('active');ov.classList.remove('active')});
+document.querySelectorAll('.mobile-menu a').forEach(a=>a.addEventListener('click',()=>{ham.classList.remove('active');mm.classList.remove('active');ov.classList.remove('active')}));
+new IntersectionObserver(e=>e.forEach(en=>{if(en.isIntersecting)en.target.classList.add('active')}),{threshold:.08,rootMargin:'0px 0px -40px 0px'}).observe(document.querySelectorAll('.reveal').forEach(el=>el)||document.body);
+document.querySelectorAll('.reveal').forEach(el=>new IntersectionObserver(e=>e.forEach(en=>{if(en.isIntersecting)en.target.classList.add('active')}),{threshold:.08}).observe(el));
+const cObs=new IntersectionObserver(e=>e.forEach(en=>{if(en.isIntersecting){animC(en.target,parseInt(en.target.dataset.target));cObs.unobserve(en.target)}}),{threshold:.5});
+document.querySelectorAll('.counter').forEach(el=>cObs.observe(el));
+document.querySelectorAll('.time-btns button').forEach(b=>b.addEventListener('click',function(){this.parentElement.querySelectorAll('button').forEach(x=>x.classList.remove('active'));this.classList.add('active')}));
+window.addEventListener('load',()=>setTimeout(()=>document.getElementById('loader').classList.add('hidden'),2000));
+document.addEventListener('DOMContentLoaded',()=>{createAtmo();updateAll(72,245,28.5,65,412,2.3,18.5,8.2,35.1,24.8);updateGreenEnergy(INDIA_CITIES[0]);fetchRealData();setTimeout(()=>{animC(document.getElementById('hc1'),100,'+');animC(document.getElementById('hc2'),99,'%');animC(document.getElementById('hc3'),24,'/7');animC(document.getElementById('hc4'),6)},2200);setInterval(fetchRealData,5000);setInterval(()=>{document.getElementById('ds_r').textContent=(1.2+Math.random()*2.5).toFixed(1)+' KB/s';document.getElementById('ds_solar').textContent=(1.5+Math.random()*3).toFixed(1)+' kWh';document.getElementById('ds_eff').textContent=(16+Math.random()*5).toFixed(1)+'%';document.getElementById('ds_bat').textContent=Math.round(85+Math.random()*15)+'%';document.getElementById('ds_w').textContent=(-32-Math.round(Math.random()*18))+' dBm';document.getElementById('ds_m').textContent=(58+Math.round(Math.random()*22))+'%'},8000)});
+</script>
+</body>
+</html>

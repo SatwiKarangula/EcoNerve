@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EcoNerve – Analytics</title>
+  <link rel="stylesheet" href="assets/css/style.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    .analytics-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+    .full-width { grid-column:1/-1; }
+    .chart-tall { height:280px; }
+    .stat-row { display:flex; gap:16px; flex-wrap:wrap; margin-bottom:24px; }
+    .mini-kpi { flex:1; min-width:140px; padding:20px; }
+    .mini-kpi-label { font-size:0.72rem; color:var(--text3); text-transform:uppercase; letter-spacing:1px; }
+    .mini-kpi-val   { font-family:var(--font-display); font-size:1.6rem; font-weight:800; margin-top:4px; }
+    @media(max-width:700px){ .analytics-grid{grid-template-columns:1fr;} }
+    .table-wrap { overflow-x:auto; }
+    table { width:100%; border-collapse:collapse; font-size:0.88rem; }
+    th,td { padding:12px 16px; text-align:left; border-bottom:1px solid var(--border); }
+    th { color:var(--text3); font-weight:600; font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; }
+    tr:hover td { background:rgba(0,230,118,0.04); }
+  </style>
+</head>
+<body>
+<canvas id="particle-canvas"></canvas>
+<nav class="navbar page">
+  <div style="display:flex;align-items:center;gap:16px;">
+    <button class="hamburger" id="sidebar-toggle">☰</button>
+    <div class="nav-logo"><span class="logo-icon">🌿</span><span class="gradient-text">EcoNerve</span></div>
+  </div>
+  <button class="btn-ghost" onclick="handleLogout()" style="padding:8px 18px;font-size:0.85rem;">Sign Out</button>
+</nav>
+
+<div class="app-layout page">
+  <aside class="sidebar">
+    <div class="sidebar-section">Navigation</div>
+    <a href="dashboard.html" class="sidebar-link"><span class="icon">🏠</span>Dashboard</a>
+    <a href="analytics.html" class="sidebar-link active"><span class="icon">📈</span>Analytics</a>
+    <a href="profile.html"   class="sidebar-link"><span class="icon">👤</span>Profile</a>
+    <a href="settings.html"  class="sidebar-link"><span class="icon">⚙️</span>Settings</a>
+    <div class="sidebar-section">Account</div>
+    <a href="#" class="sidebar-link" onclick="handleLogout()"><span class="icon">🚪</span>Sign Out</a>
+  </aside>
+
+  <main class="main-content">
+    <div class="page-header">
+      <h1 class="page-title">Analytics</h1>
+      <p class="page-sub">Historical trends, AQI distribution, and statistical insights</p>
+    </div>
+
+    <!-- KPI row -->
+    <div class="stat-row stagger">
+      <div class="mini-kpi glass"><div class="mini-kpi-label">Avg AQI (24h)</div><div class="mini-kpi-val gradient-text" id="avgAQI">–</div></div>
+      <div class="mini-kpi glass"><div class="mini-kpi-label">Max AQI (24h)</div><div class="mini-kpi-val" style="color:var(--red)" id="maxAQI">–</div></div>
+      <div class="mini-kpi glass"><div class="mini-kpi-label">Min AQI (24h)</div><div class="mini-kpi-val" style="color:var(--green)" id="minAQI">–</div></div>
+      <div class="mini-kpi glass"><div class="mini-kpi-label">Avg TDS (24h)</div><div class="mini-kpi-val" style="color:var(--teal)" id="avgTDS">–</div></div>
+    </div>
+
+    <div class="analytics-grid">
+      <!-- AQI line chart -->
+      <div class="chart-card glass full-width">
+        <div class="chart-header">
+          <div class="chart-title">📊 AQI History (last 48 readings)</div>
+          <div class="live-badge"><span class="live-dot"></span>Live</div>
+        </div>
+        <div class="chart-wrap chart-tall"><canvas id="historyChart"></canvas></div>
+      </div>
+
+      <!-- AQI distribution donut -->
+      <div class="chart-card glass">
+        <div class="chart-header"><div class="chart-title">🥧 AQI Distribution</div></div>
+        <div class="chart-wrap" style="height:220px;display:flex;align-items:center;justify-content:center;">
+          <canvas id="donutChart" style="max-height:220px;"></canvas>
+        </div>
+      </div>
+
+      <!-- TDS line chart -->
+      <div class="chart-card glass">
+        <div class="chart-header"><div class="chart-title">💧 TDS Trend</div></div>
+        <div class="chart-wrap" style="height:220px;"><canvas id="tdsChart"></canvas></div>
+      </div>
+
+      <!-- Data table -->
+      <div class="chart-card glass full-width">
+        <div class="chart-header"><div class="chart-title">📋 Recent Readings</div></div>
+        <div class="table-wrap">
+          <table id="dataTable">
+            <thead>
+              <tr><th>Time</th><th>AQI</th><th>Status</th><th>TDS (ppm)</th><th>Temp (°C)</th></tr>
+            </thead>
+            <tbody id="tableBody"><tr><td colspan="5" style="color:var(--text3);text-align:center;padding:24px;">Loading data…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<div id="toast-container"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+<script src="assets/js/firebase-config.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/ai-prediction.js"></script>
+<script src="assets/js/utils.js"></script>
+<script>
+const chartOpts = (yLabel) => ({
+  responsive:true, maintainAspectRatio:false,
+  scales:{
+    x:{grid:{color:'rgba(0,200,80,0.06)'},ticks:{color:'#4caf6a',font:{size:10},maxTicksLimit:8}},
+    y:{grid:{color:'rgba(0,200,80,0.08)'},ticks:{color:'#4caf6a',font:{size:10}},title:{display:true,text:yLabel,color:'#4caf6a',font:{size:11}}}
+  },
+  plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(7,20,16,0.95)',borderColor:'rgba(0,230,118,0.2)',borderWidth:1,titleColor:'#00e676',bodyColor:'#a5d6a7'}}
+});
+
+let histChart, donut, tdsChartInst;
+
+function buildCharts() {
+  histChart = new Chart(document.getElementById('historyChart').getContext('2d'),{
+    type:'line',data:{labels:[],datasets:[{label:'AQI',data:[],borderColor:'#00e676',backgroundColor:'rgba(0,230,118,0.07)',borderWidth:2,fill:true,tension:0.4,pointRadius:2}]},
+    options:chartOpts('AQI')
+  });
+  donut = new Chart(document.getElementById('donutChart').getContext('2d'),{
+    type:'doughnut',
+    data:{labels:['Good','Moderate','Unhealthy (SG)','Unhealthy','Very Unhealthy'],
+          datasets:[{data:[0,0,0,0,0],backgroundColor:['#00e676','#ffee58','#ffa726','#ef5350','#ab47bc'],borderColor:'#040d08',borderWidth:3}]},
+    options:{responsive:true,cutout:'65%',plugins:{legend:{position:'right',labels:{color:'#a5d6a7',font:{size:11},boxWidth:12}}}}
+  });
+  tdsChartInst = new Chart(document.getElementById('tdsChart').getContext('2d'),{
+    type:'line',data:{labels:[],datasets:[{label:'TDS',data:[],borderColor:'#1de9b6',backgroundColor:'rgba(29,233,182,0.07)',borderWidth:2,fill:true,tension:0.4,pointRadius:2}]},
+    options:chartOpts('TDS (ppm)')
+  });
+}
+
+function populateFromData(entries) {
+  if(!entries.length) return;
+  const aqis = entries.map(e=>parseFloat(e.aqi||0));
+  const tdss = entries.map(e=>parseFloat(e.tds||0));
+  const lbls = entries.map(e=>fmtTime(e.timestamp));
+
+  document.getElementById('avgAQI').textContent = (aqis.reduce((a,b)=>a+b,0)/aqis.length).toFixed(1);
+  document.getElementById('maxAQI').textContent = Math.max(...aqis).toFixed(1);
+  document.getElementById('minAQI').textContent = Math.min(...aqis).toFixed(1);
+  document.getElementById('avgTDS').textContent = (tdss.reduce((a,b)=>a+b,0)/tdss.length).toFixed(1);
+
+  histChart.data.labels = lbls; histChart.data.datasets[0].data = aqis; histChart.update();
+  tdsChartInst.data.labels = lbls; tdsChartInst.data.datasets[0].data = tdss; tdsChartInst.update();
+
+  // Distribution
+  const dist = [0,0,0,0,0];
+  aqis.forEach(a=>{ if(a<=50)dist[0]++; else if(a<=100)dist[1]++; else if(a<=150)dist[2]++; else if(a<=200)dist[3]++; else dist[4]++; });
+  donut.data.datasets[0].data = dist; donut.update();
+
+  // Table
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = [...entries].reverse().slice(0,20).map(e=>{
+    const cat = classifyAQI(parseFloat(e.aqi||0));
+    return `<tr>
+      <td>${fmtTime(e.timestamp)}</td>
+      <td style="font-weight:700;color:${cat.color}">${parseFloat(e.aqi||0).toFixed(1)}</td>
+      <td><span style="background:${cat.color}20;color:${cat.color};padding:3px 10px;border-radius:50px;font-size:0.78rem;font-weight:600">${cat.label}</span></td>
+      <td>${parseFloat(e.tds||0).toFixed(1)}</td>
+      <td>${parseFloat(e.temperature||0).toFixed(1)}</td>
+    </tr>`;
+  }).join('');
+}
+
+function generateDemo() {
+  let aqi=48,tds=150,temp=28;
+  return Array.from({length:48},(_,i)=>{
+    aqi = Math.max(10,Math.min(200,aqi+(Math.random()-.48)*7));
+    tds = Math.max(40,Math.min(500,tds+(Math.random()-.5)*18));
+    temp= Math.max(18,Math.min(42,temp+(Math.random()-.5)));
+    return{aqi,tds,temperature:temp,timestamp:Date.now()-((47-i)*180000)};
+  });
+}
+
+buildCharts();
+requireAuth(() => {
+  const cfg = firebase.app().options;
+  if(!cfg.databaseURL || cfg.databaseURL.includes('YOUR_PROJECT')) {
+    showToast('Demo mode – showing simulated analytics.','info');
+    populateFromData(generateDemo());
+    return;
+  }
+  db.ref('sensorData').orderByChild('timestamp').limitToLast(48).on('value', snap=>{
+    const entries=[];
+    snap.forEach(c=>entries.push(c.val()));
+    entries.sort((a,b)=>a.timestamp-b.timestamp);
+    populateFromData(entries);
+  });
+});
+</script>
+</body>
+</html>

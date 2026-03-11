@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EcoNerve – Sign In</title>
+  <link rel="stylesheet" href="assets/css/style.css"/>
+  <style>
+    .auth-page {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      padding: 24px; position: relative;
+    }
+    .auth-card { width: 100%; max-width: 420px; padding: 44px 40px; position: relative; }
+    .auth-logo {
+      text-align: center; margin-bottom: 32px;
+      font-family: var(--font-display); font-size: 1.6rem; font-weight: 800;
+    }
+    .auth-title { font-family: var(--font-display); font-size: 1.5rem; font-weight: 800;
+      text-align: center; margin-bottom: 6px; }
+    .auth-sub { text-align: center; color: var(--text2); font-size: 0.88rem; margin-bottom: 32px; }
+    .auth-form { display: flex; flex-direction: column; gap: 18px; }
+    .auth-btn { width: 100%; padding: 14px; font-size: 1rem; }
+    .auth-switch { text-align: center; font-size: 0.85rem; color: var(--text2); margin-top: 20px; }
+    .orb-auth {
+      position: fixed; width: 500px; height: 500px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,230,118,0.08), transparent 70%);
+      pointer-events: none;
+    }
+    .orb-auth-1 { top: -150px; left: -150px; }
+    .orb-auth-2 { bottom: -150px; right: -150px; }
+    .pwd-wrap { position: relative; }
+    .pwd-toggle {
+      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+      background: none; font-size: 1rem; color: var(--text3); cursor: pointer;
+      padding: 4px;
+    }
+  </style>
+</head>
+<body>
+<canvas id="particle-canvas"></canvas>
+<div class="orb-auth orb-auth-1"></div>
+<div class="orb-auth orb-auth-2"></div>
+
+<div class="auth-page page">
+  <div class="auth-card glass slide-up">
+    <div class="auth-logo"><span class="gradient-text">🌿 EcoNerve</span></div>
+    <h1 class="auth-title">Welcome Back</h1>
+    <p class="auth-sub">Sign in to your monitoring dashboard</p>
+
+    <form class="auth-form" id="loginForm" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input id="email" type="email" class="form-input" placeholder="you@example.com" required autocomplete="email"/>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="pwd-wrap">
+          <input id="password" type="password" class="form-input" placeholder="••••••••" required
+                 style="width:100%;padding-right:44px" autocomplete="current-password"/>
+          <button type="button" class="pwd-toggle" onclick="togglePwd()" id="pwdEye">👁</button>
+        </div>
+      </div>
+      <button type="submit" class="btn-primary auth-btn" id="authBtn">Sign In</button>
+    </form>
+
+    <div class="auth-switch">
+      Don't have an account? <a href="signup.html">Create one →</a>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<!-- Firebase SDKs (compat) -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+<script src="assets/js/firebase-config.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/utils.js"></script>
+<script>
+  redirectIfAuthed();
+  function togglePwd() {
+    const inp = document.getElementById('password');
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+  }
+</script>
+</body>
+</html>

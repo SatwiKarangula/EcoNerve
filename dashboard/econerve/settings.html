@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EcoNerve – Settings</title>
+  <link rel="stylesheet" href="assets/css/style.css"/>
+  <style>
+    .settings-grid { display:grid;grid-template-columns:1fr 1fr;gap:20px; }
+    .settings-section { padding:28px; }
+    .ss-title { font-family:var(--font-display);font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:8px; }
+    .toggle-row { display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--border); }
+    .toggle-row:last-of-type{border-bottom:none;}
+    .toggle-label { font-size:0.88rem; }
+    .toggle-desc { font-size:0.75rem;color:var(--text3);margin-top:2px; }
+    .toggle { position:relative;width:44px;height:24px;cursor:pointer; }
+    .toggle input{opacity:0;width:0;height:0;}
+    .slider { position:absolute;inset:0;background:rgba(0,50,25,0.6);border-radius:24px;
+      border:1px solid var(--border);transition:var(--transition); }
+    .slider:before { content:'';position:absolute;width:18px;height:18px;border-radius:50%;
+      background:var(--text3);left:3px;top:2px;transition:var(--transition); }
+    input:checked + .slider { background:rgba(0,200,83,0.25);border-color:var(--green); }
+    input:checked + .slider:before { transform:translateX(20px);background:var(--green);
+      box-shadow:0 0 8px var(--green); }
+    .threshold-row { display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border); }
+    .threshold-row:last-of-type{border-bottom:none;}
+    .threshold-label { flex:1;font-size:0.88rem; }
+    .threshold-input { width:80px; }
+    @media(max-width:700px){.settings-grid{grid-template-columns:1fr;}}
+    .danger-zone { border-color:rgba(255,82,82,0.3);background:rgba(40,10,10,0.4); }
+    .danger-zone .ss-title{color:var(--red);}
+    .save-btn { margin-top:8px;width:100%; }
+  </style>
+</head>
+<body>
+<canvas id="particle-canvas"></canvas>
+<nav class="navbar page">
+  <div style="display:flex;align-items:center;gap:16px;">
+    <button class="hamburger" id="sidebar-toggle">☰</button>
+    <div class="nav-logo"><span class="logo-icon">🌿</span><span class="gradient-text">EcoNerve</span></div>
+  </div>
+  <button class="btn-ghost" onclick="handleLogout()" style="padding:8px 18px;font-size:0.85rem;">Sign Out</button>
+</nav>
+
+<div class="app-layout page">
+  <aside class="sidebar">
+    <div class="sidebar-section">Navigation</div>
+    <a href="dashboard.html" class="sidebar-link"><span class="icon">🏠</span>Dashboard</a>
+    <a href="analytics.html" class="sidebar-link"><span class="icon">📈</span>Analytics</a>
+    <a href="profile.html"   class="sidebar-link"><span class="icon">👤</span>Profile</a>
+    <a href="settings.html"  class="sidebar-link active"><span class="icon">⚙️</span>Settings</a>
+    <div class="sidebar-section">Account</div>
+    <a href="#" class="sidebar-link" onclick="handleLogout()"><span class="icon">🚪</span>Sign Out</a>
+  </aside>
+
+  <main class="main-content">
+    <div class="page-header">
+      <h1 class="page-title">Settings</h1>
+      <p class="page-sub">Customize alerts, display, and sensor preferences</p>
+    </div>
+
+    <div class="settings-grid stagger">
+      <!-- Notifications -->
+      <div class="settings-section glass">
+        <div class="ss-title">🔔 Notifications</div>
+        <div class="toggle-row">
+          <div><div class="toggle-label">AQI Alerts</div><div class="toggle-desc">Alert when AQI exceeds threshold</div></div>
+          <label class="toggle"><input type="checkbox" id="t-aqi" checked/><span class="slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div><div class="toggle-label">TDS Alerts</div><div class="toggle-desc">Alert when water quality degrades</div></div>
+          <label class="toggle"><input type="checkbox" id="t-tds" checked/><span class="slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div><div class="toggle-label">AI Forecast Warnings</div><div class="toggle-desc">Notify on predicted rising pollution</div></div>
+          <label class="toggle"><input type="checkbox" id="t-forecast" checked/><span class="slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div><div class="toggle-label">Sensor Offline Alert</div><div class="toggle-desc">Notify if ESP32 stops sending data</div></div>
+          <label class="toggle"><input type="checkbox" id="t-offline"/><span class="slider"></span></label>
+        </div>
+        <button class="btn-primary save-btn" onclick="saveSettings()">Save Notification Settings</button>
+      </div>
+
+      <!-- Thresholds -->
+      <div class="settings-section glass">
+        <div class="ss-title">⚠️ Alert Thresholds</div>
+        <div class="threshold-row">
+          <div class="threshold-label">
+            <div>AQI Warning Level</div>
+            <div style="font-size:0.75rem;color:var(--text3)">Default: 100</div>
+          </div>
+          <input type="number" id="aqiThreshold" class="form-input threshold-input" value="100" min="0" max="500"/>
+        </div>
+        <div class="threshold-row">
+          <div class="threshold-label">
+            <div>AQI Critical Level</div>
+            <div style="font-size:0.75rem;color:var(--text3)">Default: 200</div>
+          </div>
+          <input type="number" id="aqiCritical" class="form-input threshold-input" value="200" min="0" max="500"/>
+        </div>
+        <div class="threshold-row">
+          <div class="threshold-label">
+            <div>TDS Warning (ppm)</div>
+            <div style="font-size:0.75rem;color:var(--text3)">Default: 300</div>
+          </div>
+          <input type="number" id="tdsThreshold" class="form-input threshold-input" value="300" min="0" max="2000"/>
+        </div>
+        <div class="threshold-row">
+          <div class="threshold-label">
+            <div>Data Refresh Rate (s)</div>
+            <div style="font-size:0.75rem;color:var(--text3)">Default: 3</div>
+          </div>
+          <input type="number" id="refreshRate" class="form-input threshold-input" value="3" min="1" max="60"/>
+        </div>
+        <button class="btn-primary save-btn" onclick="saveSettings()">Save Thresholds</button>
+      </div>
+
+      <!-- Display -->
+      <div class="settings-section glass">
+        <div class="ss-title">🎨 Display</div>
+        <div class="toggle-row">
+          <div><div class="toggle-label">Particle Effects</div><div class="toggle-desc">Floating background particles</div></div>
+          <label class="toggle"><input type="checkbox" id="t-particles" checked/><span class="slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div><div class="toggle-label">Animated Gauge</div><div class="toggle-desc">Smooth AQI gauge animation</div></div>
+          <label class="toggle"><input type="checkbox" id="t-gauge" checked/><span class="slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div><div class="toggle-label">Chart Animations</div><div class="toggle-desc">Animate chart updates</div></div>
+          <label class="toggle"><input type="checkbox" id="t-chartanim" checked/><span class="slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div><div class="toggle-label">Show Health Tips</div><div class="toggle-desc">Display AQI health recommendations</div></div>
+          <label class="toggle"><input type="checkbox" id="t-health" checked/><span class="slider"></span></label>
+        </div>
+      </div>
+
+      <!-- Danger zone -->
+      <div class="settings-section glass danger-zone">
+        <div class="ss-title">🚨 Danger Zone</div>
+        <p style="font-size:0.85rem;color:var(--text2);margin-bottom:20px;line-height:1.7;">
+          Irreversible actions. Please proceed with caution.
+        </p>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <button class="btn-ghost" style="border-color:rgba(255,82,82,0.3);color:var(--red);" onclick="clearData()">🗑 Clear All Sensor History</button>
+          <button class="btn-ghost" style="border-color:rgba(255,82,82,0.3);color:var(--red);" onclick="deleteAccount()">⚠️ Delete Account</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<div id="toast-container"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+<script src="assets/js/firebase-config.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/utils.js"></script>
+<script>
+requireAuth(user => {
+  // Load saved settings
+  db.ref(`users/${user.uid}/settings`).once('value').then(snap => {
+    const s = snap.val();
+    if (!s) return;
+    if (s.aqiAlerts    !== undefined) document.getElementById('t-aqi').checked      = s.aqiAlerts;
+    if (s.tdsAlerts    !== undefined) document.getElementById('t-tds').checked      = s.tdsAlerts;
+    if (s.forecastWarn !== undefined) document.getElementById('t-forecast').checked = s.forecastWarn;
+    if (s.aqiThreshold !== undefined) document.getElementById('aqiThreshold').value = s.aqiThreshold;
+    if (s.aqiCritical  !== undefined) document.getElementById('aqiCritical').value  = s.aqiCritical;
+    if (s.tdsThreshold !== undefined) document.getElementById('tdsThreshold').value = s.tdsThreshold;
+  });
+});
+
+function saveSettings() {
+  const user = auth.currentUser;
+  if (!user) return;
+  const settings = {
+    aqiAlerts:    document.getElementById('t-aqi').checked,
+    tdsAlerts:    document.getElementById('t-tds').checked,
+    forecastWarn: document.getElementById('t-forecast').checked,
+    aqiThreshold: parseInt(document.getElementById('aqiThreshold').value),
+    aqiCritical:  parseInt(document.getElementById('aqiCritical').value),
+    tdsThreshold: parseInt(document.getElementById('tdsThreshold').value),
+    refreshRate:  parseInt(document.getElementById('refreshRate').value),
+    updatedAt:    Date.now()
+  };
+  db.ref(`users/${user.uid}/settings`).set(settings)
+    .then(() => showToast('Settings saved successfully!', 'success'))
+    .catch(() => showToast('Failed to save settings.', 'error'));
+}
+
+function clearData() {
+  if (!confirm('This will delete ALL sensor readings. Are you sure?')) return;
+  db.ref('sensorData').remove()
+    .then(() => showToast('Sensor history cleared.', 'success'))
+    .catch(() => showToast('Operation failed.', 'error'));
+}
+
+function deleteAccount() {
+  showToast('Please contact support to delete your account.', 'info');
+}
+</script>
+</body>
+</html>

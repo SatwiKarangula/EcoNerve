@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EcoNerve – Create Account</title>
+  <link rel="stylesheet" href="assets/css/style.css"/>
+  <style>
+    .auth-page {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      padding: 24px; position: relative;
+    }
+    .auth-card { width: 100%; max-width: 440px; padding: 44px 40px; }
+    .auth-logo { text-align: center; margin-bottom: 28px;
+      font-family: var(--font-display); font-size: 1.6rem; font-weight: 800; }
+    .auth-title { font-family: var(--font-display); font-size: 1.5rem; font-weight: 800;
+      text-align: center; margin-bottom: 6px; }
+    .auth-sub { text-align: center; color: var(--text2); font-size: 0.88rem; margin-bottom: 32px; }
+    .auth-form { display: flex; flex-direction: column; gap: 16px; }
+    .auth-btn { width: 100%; padding: 14px; font-size: 1rem; }
+    .auth-switch { text-align: center; font-size: 0.85rem; color: var(--text2); margin-top: 20px; }
+    .pwd-strength { display: flex; gap: 4px; margin-top: 6px; }
+    .pwd-bar { height: 3px; flex: 1; border-radius: 2px; background: var(--border); transition: var(--transition); }
+    .orb-auth { position: fixed; width: 500px; height: 500px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(29,233,182,0.07), transparent 70%); pointer-events: none; }
+    .orb-auth-1 { top: -150px; right: -150px; }
+    .orb-auth-2 { bottom: -150px; left: -150px; }
+  </style>
+</head>
+<body>
+<canvas id="particle-canvas"></canvas>
+<div class="orb-auth orb-auth-1"></div>
+<div class="orb-auth orb-auth-2"></div>
+
+<div class="auth-page page">
+  <div class="auth-card glass slide-up">
+    <div class="auth-logo"><span class="gradient-text">🌿 EcoNerve</span></div>
+    <h1 class="auth-title">Create Account</h1>
+    <p class="auth-sub">Join the environmental monitoring network</p>
+
+    <form class="auth-form" id="signupForm" onsubmit="handleSignup(event)">
+      <div class="form-group">
+        <label for="fullName">Full Name</label>
+        <input id="fullName" type="text" class="form-input" placeholder=" " required autocomplete="name"/>
+      </div>
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input id="email" type="email" class="form-input" placeholder=" " required autocomplete="email"/>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input id="password" type="password" class="form-input" placeholder="Min. 6 characters"
+               required oninput="checkStrength()" autocomplete="new-password"/>
+        <div class="pwd-strength" id="strengthBars">
+          <div class="pwd-bar" id="b1"></div>
+          <div class="pwd-bar" id="b2"></div>
+          <div class="pwd-bar" id="b3"></div>
+          <div class="pwd-bar" id="b4"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input id="confirmPassword" type="password" class="form-input" placeholder="Repeat password"
+               required autocomplete="new-password"/>
+      </div>
+      <button type="submit" class="btn-primary auth-btn" id="authBtn">Create Account</button>
+    </form>
+
+    <div class="auth-switch">
+      Already have an account? <a href="login.html">Sign in →</a>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+<script src="assets/js/firebase-config.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/utils.js"></script>
+<script>
+  redirectIfAuthed();
+  function checkStrength() {
+    const v = document.getElementById('password').value;
+    const colors = ['#ef5350','#ffa726','#ffee58','#00e676'];
+    let score = 0;
+    if (v.length >= 6) score++;
+    if (v.length >= 10) score++;
+    if (/[A-Z]/.test(v) && /[0-9]/.test(v)) score++;
+    if (/[^A-Za-z0-9]/.test(v)) score++;
+    [1,2,3,4].forEach(i => {
+      const bar = document.getElementById(`b${i}`);
+      bar.style.background = i <= score ? colors[score-1] : 'var(--border)';
+    });
+  }
+</script>
+</body>
+</html>

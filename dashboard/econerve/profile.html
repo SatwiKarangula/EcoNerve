@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EcoNerve – Profile</title>
+  <link rel="stylesheet" href="assets/css/style.css"/>
+  <style>
+    .profile-hero { display:flex;align-items:center;gap:24px;padding:32px;margin-bottom:24px; }
+    .avatar { width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--teal));
+      display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:800;
+      font-family:var(--font-display);color:#040d08;flex-shrink:0; }
+    .profile-info-name { font-family:var(--font-display);font-size:1.4rem;font-weight:800; }
+    .profile-info-email { color:var(--text2);font-size:0.88rem;margin-top:2px; }
+    .profile-grid { display:grid;grid-template-columns:1fr 1fr;gap:20px; }
+    .profile-section { padding:28px; }
+    .ps-title { font-family:var(--font-display);font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:8px; }
+    .info-row { display:flex;justify-content:space-between;align-items:center;
+      padding:12px 0;border-bottom:1px solid var(--border);font-size:0.88rem; }
+    .info-row:last-child{border-bottom:none;}
+    .info-key{color:var(--text3);}
+    .info-val{color:var(--text);font-weight:500;}
+    .badge-grid { display:flex;flex-wrap:wrap;gap:10px;margin-top:4px; }
+    .badge { padding:6px 14px;border-radius:50px;font-size:0.78rem;font-weight:600; }
+    @media(max-width:700px){.profile-grid{grid-template-columns:1fr;}.profile-hero{flex-direction:column;text-align:center;}}
+  </style>
+</head>
+<body>
+<canvas id="particle-canvas"></canvas>
+<nav class="navbar page">
+  <div style="display:flex;align-items:center;gap:16px;">
+    <button class="hamburger" id="sidebar-toggle">☰</button>
+    <div class="nav-logo"><span class="logo-icon">🌿</span><span class="gradient-text">EcoNerve</span></div>
+  </div>
+  <button class="btn-ghost" onclick="handleLogout()" style="padding:8px 18px;font-size:0.85rem;">Sign Out</button>
+</nav>
+
+<div class="app-layout page">
+  <aside class="sidebar">
+    <div class="sidebar-section">Navigation</div>
+    <a href="dashboard.html" class="sidebar-link"><span class="icon">🏠</span>Dashboard</a>
+    <a href="analytics.html" class="sidebar-link"><span class="icon">📈</span>Analytics</a>
+    <a href="profile.html"   class="sidebar-link active"><span class="icon">👤</span>Profile</a>
+    <a href="settings.html"  class="sidebar-link"><span class="icon">⚙️</span>Settings</a>
+    <div class="sidebar-section">Account</div>
+    <a href="#" class="sidebar-link" onclick="handleLogout()"><span class="icon">🚪</span>Sign Out</a>
+  </aside>
+
+  <main class="main-content">
+    <div class="page-header">
+      <h1 class="page-title">Your Profile</h1>
+      <p class="page-sub">Account details and monitoring statistics</p>
+    </div>
+
+    <div class="profile-hero glass stagger">
+      <div class="avatar" id="avatarInit">?</div>
+      <div>
+        <div class="profile-info-name" id="profileName">–</div>
+        <div class="profile-info-email" id="profileEmail">–</div>
+        <div class="badge-grid" style="margin-top:10px;">
+          <span class="badge" style="background:rgba(0,230,118,0.1);color:var(--green);">🌿 Eco Monitor</span>
+          <span class="badge" style="background:rgba(29,233,182,0.1);color:var(--teal);">📡 IoT Connected</span>
+          <span class="badge" style="background:rgba(255,193,7,0.1);color:var(--amber);">🏆 Active User</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-grid stagger">
+      <div class="profile-section glass">
+        <div class="ps-title">👤 Account Information</div>
+        <div class="info-row"><span class="info-key">Full Name</span><span class="info-val" id="infoName">–</span></div>
+        <div class="info-row"><span class="info-key">Email</span><span class="info-val" id="infoEmail">–</span></div>
+        <div class="info-row"><span class="info-key">User ID</span><span class="info-val" id="infoUID" style="font-size:0.78rem;font-family:monospace;color:var(--text3)">–</span></div>
+        <div class="info-row"><span class="info-key">Member Since</span><span class="info-val" id="infoJoined">–</span></div>
+        <div class="info-row"><span class="info-key">Role</span><span class="info-val" style="color:var(--green);">Eco Monitor</span></div>
+      </div>
+
+      <div class="profile-section glass">
+        <div class="ps-title">📡 Sensor Configuration</div>
+        <div class="info-row"><span class="info-key">Air Sensor</span><span class="info-val" style="color:var(--green);">MQ-135 ✓</span></div>
+        <div class="info-row"><span class="info-key">Water Sensor</span><span class="info-val" style="color:var(--green);">SEN0244 ✓</span></div>
+        <div class="info-row"><span class="info-key">Controller</span><span class="info-val">ESP32</span></div>
+        <div class="info-row"><span class="info-key">Backend</span><span class="info-val">Firebase Realtime DB</span></div>
+        <div class="info-row"><span class="info-key">Update Rate</span><span class="info-val" style="color:var(--teal);">~3 seconds</span></div>
+      </div>
+
+      <div class="profile-section glass">
+        <div class="ps-title">📊 Your Stats</div>
+        <div class="info-row"><span class="info-key">Total Readings</span><span class="info-val" id="statReadings">–</span></div>
+        <div class="info-row"><span class="info-key">Avg AQI (all-time)</span><span class="info-val" id="statAvgAQI">–</span></div>
+        <div class="info-row"><span class="info-key">Best AQI recorded</span><span class="info-val" style="color:var(--green)" id="statBestAQI">–</span></div>
+        <div class="info-row"><span class="info-key">AI Predictions run</span><span class="info-val" id="statPreds">–</span></div>
+      </div>
+
+      <div class="profile-section glass">
+        <div class="ps-title">🛡️ Security Status</div>
+        <div class="info-row"><span class="info-key">Authentication</span><span class="info-val" style="color:var(--green);">Firebase Auth ✓</span></div>
+        <div class="info-row"><span class="info-key">Email Verified</span><span class="info-val" id="emailVerified">–</span></div>
+        <div class="info-row"><span class="info-key">DB Rules</span><span class="info-val" style="color:var(--green);">Authenticated only</span></div>
+        <div class="info-row"><span class="info-key">Data Isolation</span><span class="info-val" style="color:var(--green);">Per-user ✓</span></div>
+      </div>
+    </div>
+  </main>
+</div>
+<div id="toast-container"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+<script src="assets/js/firebase-config.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/ai-prediction.js"></script>
+<script src="assets/js/utils.js"></script>
+<script>
+requireAuth(user => {
+  document.getElementById('profileEmail').textContent = user.email;
+  document.getElementById('infoEmail').textContent    = user.email;
+  document.getElementById('infoUID').textContent      = user.uid;
+  document.getElementById('emailVerified').textContent = user.emailVerified ? '✓ Verified' : '⚠ Not verified';
+  document.getElementById('emailVerified').style.color = user.emailVerified ? 'var(--green)' : 'var(--amber)';
+
+  db.ref(`users/${user.uid}`).once('value').then(snap => {
+    const d = snap.val() || {};
+    const name = d.fullName || user.email.split('@')[0];
+    document.getElementById('profileName').textContent = name;
+    document.getElementById('infoName').textContent    = name;
+    document.getElementById('avatarInit').textContent  = name.charAt(0).toUpperCase();
+    if (d.createdAt) document.getElementById('infoJoined').textContent = new Date(d.createdAt).toLocaleDateString();
+  });
+
+  const cfg = firebase.app().options;
+  if(!cfg.databaseURL || cfg.databaseURL.includes('YOUR_PROJECT')) {
+    document.getElementById('statReadings').textContent = '248 (demo)';
+    document.getElementById('statAvgAQI').textContent   = '54.2';
+    document.getElementById('statBestAQI').textContent  = '12.0';
+    document.getElementById('statPreds').textContent    = '42';
+    return;
+  }
+  db.ref('sensorData').once('value').then(snap => {
+    let count=0, sum=0, best=999;
+    snap.forEach(c => {
+      const v=parseFloat(c.val().aqi||0);
+      count++; sum+=v; if(v<best)best=v;
+    });
+    document.getElementById('statReadings').textContent = count;
+    document.getElementById('statAvgAQI').textContent   = count ? (sum/count).toFixed(1) : '–';
+    document.getElementById('statBestAQI').textContent  = count ? best.toFixed(1) : '–';
+    document.getElementById('statPreds').textContent    = Math.max(0, count-5);
+  });
+});
+</script>
+</body>
+</html>
